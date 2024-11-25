@@ -3,7 +3,7 @@ import User from "@/models/User";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
 
-//
+// 5.
 export async function POST(req) {
   try {
     await connectDB();

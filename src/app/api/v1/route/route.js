@@ -3,10 +3,11 @@ import { userAdminGuard, userAuthGuard } from "@/middleware/user";
 import Bus from "@/models/Bus";
 import Route from "@/models/Route";
 import Stop from "@/models/Stop";
+import User from "@/models/User";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
 
-//
+// 6.
 export async function GET(req) {
   try {
     await connectDB();
@@ -20,8 +21,8 @@ export async function GET(req) {
         model: "Bus",
         populate: {
           path: "driver",
-          select: "-password"
-        }
+          select: "-password",
+        },
       })
       .populate({
         path: "stops",
@@ -37,7 +38,7 @@ export async function GET(req) {
   }
 }
 
-//
+// 7.
 export async function POST(req) {
   try {
     await connectDB();
@@ -116,7 +117,7 @@ export async function POST(req) {
   }
 }
 
-//
+// 8.
 export async function PUT(req) {
   try {
     await connectDB();
@@ -160,7 +161,7 @@ export async function PUT(req) {
   }
 }
 
-//
+// 9.
 export async function DELETE(req) {
   try {
     await connectDB();
@@ -179,11 +180,28 @@ export async function DELETE(req) {
     if (!route) {
       return resError("Route was not found.");
     }
+    const buses = await Bus.find({ route: routeId });
+
+    if (buses.length) {
+      const userUpdates = buses.map(async (bus) => {
+        if (bus.driver) {
+          await User.findByIdAndUpdate(bus.driver, { bus: null });
+        }
+      });
+
+      await Promise.all(userUpdates);
+      console.log("User bus fields updated successfully.");
+    } else {
+      console.log("No buses found for the given route.");
+    }
+    await Bus.deleteAll({ route: routeId });
+
+    await Stop.deleteAll({ route: routeId });
 
     return NextResponse.json(
       {
         success: true,
-        message: "Route has been deleted.",
+        message: "Route and its buses and stops has been deleted.",
         data: route,
       },
       { status: 200 }

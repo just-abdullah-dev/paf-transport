@@ -5,14 +5,14 @@ import User from "@/models/User";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
 
-//
+// 1.
 export async function GET(req) {
   try {
     await connectDB();
-    // const authData = await userAdminGuard(req);
-    // if (!authData?.success) {
-    //   return resError(authData?.message);
-    // }
+    const authData = await userAdminGuard(req);
+    if (!authData?.success) {
+      return resError(authData?.message);
+    }
     const { searchParams } = new URL(req.url);
     const role = searchParams.get("role");
 
@@ -37,7 +37,7 @@ export async function GET(req) {
   }
 }
 
-//
+// 2.
 export async function POST(req) {
   try {
     await connectDB();
@@ -45,10 +45,10 @@ export async function POST(req) {
     const { email, password, name, role, phone, address, busId } =
       await req.json();
 
-    // const authData = await userAdminGuard(req);
-    // if (!authData?.success) {
-    //   return resError(authData?.message);
-    // }
+    const authData = await userAdminGuard(req);
+    if (!authData?.success) {
+      return resError(authData?.message);
+    }
 
     let bus;
     if (role === "driver" && busId) {
@@ -106,7 +106,7 @@ export async function POST(req) {
   }
 }
 
-//
+// 3.
 export async function PUT(req) {
   try {
     await connectDB();
@@ -155,7 +155,7 @@ export async function PUT(req) {
   }
 }
 
-//
+// 4.
 export async function DELETE(req) {
   try {
     await connectDB();

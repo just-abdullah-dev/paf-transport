@@ -7,7 +7,7 @@ import User from "@/models/User";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
 
-//
+// 14.
 export async function GET(req) {
   try {
     await connectDB();
@@ -15,7 +15,10 @@ export async function GET(req) {
     if (!authData?.success) {
       return resError(authData?.message);
     }
-    const data = await Stop.find().populate({
+    const { searchParams } = new URL(req.url);
+    const routeId = searchParams.get("routeId");
+
+    const data = await Stop.find(routeId ? { route: routeId } : {}).populate({
       path: "route",
     });
 
@@ -28,7 +31,7 @@ export async function GET(req) {
   }
 }
 
-//
+// 15.
 export async function POST(req) {
   try {
     await connectDB();
@@ -76,7 +79,7 @@ export async function POST(req) {
   }
 }
 
-//
+// 16.
 export async function PUT(req) {
   try {
     await connectDB();
@@ -115,7 +118,7 @@ export async function PUT(req) {
   }
 }
 
-//
+// 17.
 export async function DELETE(req) {
   try {
     await connectDB();
