@@ -6,7 +6,7 @@ const stopSchema = mongoose.Schema({
   dropTime: { type: String },
   route: { type: mongoose.Schema.Types.ObjectId, ref: "Route" },
 });
-
+ 
 let Stop;
 try {
   Stop = mongoose.model("Stop");

@@ -6,7 +6,7 @@ const routeSchema = mongoose.Schema({
   city: { type: String },
   buses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Bus" }],
   stops: [{ type: mongoose.Schema.Types.ObjectId, ref: "Stop" }],
-});
+}); 
 
 let Route;
 try {

@@ -1,4 +1,4 @@
-import User from "@/models/user";
+import User from "@/models/User";
 const { verify } = require("jsonwebtoken");
 
 export const userAuthGuard = async (req) => {
@@ -37,20 +37,20 @@ export const userAdminGuard = async (req) => {
   }
 };
 
-export const userEmployeeGuard = async (req) => {
+export const userDriverGuard = async (req) => {
   try {
     const authData = await userAuthGuard(req);
     if (authData?.success) {
-      if (authData?.data?.role === "employee") {
+      if (authData?.data?.role === "driver") {
         return {
           success: true,
-          message: "Token verified - User is employee",
+          message: "Token verified - User is driver",
           data: authData?.data,
         };
       } else {
         return {
           success: false,
-          message: "Invalid - Not an employee",
+          message: "Invalid - Not a driver",
         };
       }
     } else {
@@ -61,20 +61,20 @@ export const userEmployeeGuard = async (req) => {
   }
 };
 
-export const userManagerGuard = async (req) => {
+export const userBankGuard = async (req) => {
   try {
     const authData = await userAuthGuard(req);
     if (authData?.success) {
-      if (authData?.data?.role === "manager") {
+      if (authData?.data?.role === "bank") {
         return {
           success: true,
-          message: "Token verified - User is manager",
+          message: "Token verified - User is bank member",
           data: authData?.data,
         };
       } else {
         return {
           success: false,
-          message: "Invalid - Not a manager",
+          message: "Invalid - Not a bank member",
         };
       }
     } else {
@@ -82,74 +82,5 @@ export const userManagerGuard = async (req) => {
     }
   } catch (error) {
     return { success: false, message: "Invalid Token - Login Again" };
-  }
-};
-
-export const userSuperAdminGuard = async (req) => {
-  try {
-    const authData = await userAuthGuard(req);
-
-    if (authData?.success) {
-      if (authData?.data?.role === "super-admin") {
-        return {
-          success: true,
-          message: "Token verified - User is Super Admin",
-          data: authData?.data,
-        };
-      } else {
-        return {
-          success: false,
-          message: "Invalid - Not a super admin",
-        };
-      }
-    } else {
-      return authData;
-    }
-  } catch (error) {
-    return { success: false, message: "Invalid Token - Login Again" };
-  }
-};
-
-export const subscriptionCheckGuard = async (subscriptionId) => {
-  try {
-    let subscription = await User_Subscription.findById(subscriptionId);
-    if (!subscription) {
-      return {
-        success: false,
-        message: "Subscription was not found.",
-      };
-    }
-
-    const gracePeriod = Number(process.env.NEXT_PUBLIC_GRACE_PERIOD) || 0;
-    const currentDate = new Date();
-    const endDate = new Date(subscription.endDate);
-    const gracePeriodInMs = gracePeriod * 24 * 60 * 60 * 1000;
-    const gracePeriodEndDate = new Date(endDate.getTime() + gracePeriodInMs);
-
-    if (currentDate > endDate) {
-      subscription.status = "expired";
-      await subscription.save();
-      if (currentDate <= gracePeriodEndDate) {
-        const graceDateOnly = new Date(gracePeriodEndDate)
-          .toISOString()
-          .split("T")[0];
-        return {
-          success: true,
-          message: `Subscription is expired, Your grace period will end on ${graceDateOnly}`,
-        };
-      } else {
-        return {
-          success: false,
-          message: "Subscription is expired.",
-        };
-      }
-    } else {
-      return {
-        success: true,
-        message: "Subscription is active",
-      };
-    }
-  } catch (error) {
-    return { success: false, message: "Subscription Check Failed - Try Again" };
   }
 };
