@@ -4,7 +4,7 @@ const feeSchema = mongoose.Schema({
   route: { type: mongoose.Schema.Types.ObjectId, ref: "Route" },
   perMonth: { type: Number, required: true },
   perDay: { type: Number },
-});
+}); 
 
 let Fee;
 try {

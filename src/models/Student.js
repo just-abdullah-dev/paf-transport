@@ -9,7 +9,9 @@ const studentSchema = mongoose.Schema({
   stop: { type: mongoose.Schema.Types.ObjectId, ref: "Stop" },
   route: { type: mongoose.Schema.Types.ObjectId, ref: "Route" },
   bus: { type: mongoose.Schema.Types.ObjectId, ref: "Bus" },
-  feeTracking: [{ type: mongoose.Schema.Types.ObjectId, ref: "Voucher" }],
+  fees: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "StudentVoucher" },
+  ],
 });
 
 let Student;
