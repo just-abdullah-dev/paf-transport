@@ -5,7 +5,7 @@ import React from 'react'
 export default function Footer() {
   return (
     <footer className="bg-primary text-white relative">
-    <div className="container mx-auto max-w-7xl pt-10 pb-6">
+    <div className="container mx-auto max-w-7xl px-8 xl:px-0 pt-10 pb-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <h3 className="text-lg font-semibold mb-4">PAF Transport</h3>
