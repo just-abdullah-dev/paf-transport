@@ -8,7 +8,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        
+        primary: "#003b6d",
+        secondary: "#4ECDC4",
+        ternary: "#292F36",
+      },
+      keyframes: {
+        gradientShift: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '100%': { backgroundPosition: '100% 50%' },
+        },
+      },
+      animation: {
+        gradientShift: 'gradientShift 0.5s ease-in-out',
       },
     },
   },

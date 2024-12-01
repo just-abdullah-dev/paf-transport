@@ -5,7 +5,7 @@ import StudentVoucher from "@/models/StudentVoucher";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
 
-//
+// 32.
 export async function PUT(req) {
   try {
     await connectDB();
@@ -54,7 +54,7 @@ export async function PUT(req) {
   }
 }
 
-//
+// 33.
 export async function DELETE(req) {
   try {
     await connectDB();

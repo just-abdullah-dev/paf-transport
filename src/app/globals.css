@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.text-custom-gradient {
+    @apply bg-gradient-to-r from-primary via-secondary to-secondary bg-[length:110%_110%] hover:bg-[length:180%_180%]  bg-clip-text text-transparent duration-300 transition-all;
+  }
+
+  .inputTag{
+    @apply p-2 rounded-md outline-none bg-gray-300 ;
+  }
