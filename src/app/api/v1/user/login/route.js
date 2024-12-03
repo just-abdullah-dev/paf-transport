@@ -29,6 +29,7 @@ export async function POST(req) {
       return NextResponse.json(
         {
           success: true,
+          message: "Logged in successfully.",
           data: {
             ...user2?._doc,
             token: await user.generateJWT(),
