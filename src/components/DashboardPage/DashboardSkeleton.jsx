@@ -19,6 +19,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Header from "../LandingPage/Layout/Header/Header";
+import { toast } from "../utils/Toast";
 
 export default function DashboardSkeleton({ children }) {
   const dispatch = useAppDispatch();
@@ -33,6 +34,7 @@ export default function DashboardSkeleton({ children }) {
   useEffect(() => {
     if (!user?._id) {
       window.location.href = "/login";
+      toast.error("Login First.")
     } else {
       switch (user.role) {
         case "admin":

@@ -21,7 +21,7 @@ export const Toast = () => {
   }, []);
 
   return (
-    <div className="fixed top-5 right-5 space-y-3">
+    <div className="fixed z-[100] top-5 right-[12vw] space-y-3">
       {toasts.map((toast) => (
         <div
           key={toast.id}
