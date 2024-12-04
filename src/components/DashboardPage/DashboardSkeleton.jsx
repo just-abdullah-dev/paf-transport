@@ -49,7 +49,7 @@ export default function DashboardSkeleton({ children }) {
           break;
       }
     }
-  }, []);
+  }, [user]);
 
   const [openSidebar, setOpenSidebar] = useState(true);
   const adminMenu = [
