@@ -1,5 +1,5 @@
+import Button from "@/components/utils/Button";
 import Link from "next/link";
-import Button from "../../utils/Button";
 
 export default function HeroSection() {
   return (

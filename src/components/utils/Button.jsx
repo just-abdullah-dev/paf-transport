@@ -6,13 +6,15 @@ export default function Button({
   variant = "primary",
   type = "button",
   onClick,
+  disabled
 }) {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       type={type}
       className={`
-      rounded-lg py-2 px-8 text-white font-[500] duration-300 transition-all 
+      rounded-lg py-2 px-8 text-white font-[500] duration-300 transition-all disabled:cursor-not-allowed disabled:opacity-85 
       ${
         variant === "primary"
           ? "bg-gradient-to-tl from-primary to-secondary bg-[length:135%_135%] hover:bg-[length:102%_102%]"

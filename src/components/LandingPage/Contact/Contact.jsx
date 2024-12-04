@@ -1,5 +1,5 @@
+import Button from '@/components/utils/Button'
 import { Phone, Mail, MapPin } from 'lucide-react'
-import Button from '../../utils/Button'
 import Link from 'next/link'
 
 export default function Contact() {

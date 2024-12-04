@@ -1,7 +1,8 @@
 import importModels from "@/models";
 import { poppins } from "./font";
 import "./globals.css";
-import { Toast } from "./components/utils/Toast";
+import { Toast } from "@/components/utils/Toast";
+import StoreProvider from "./StoreProvider";
 
 export const metadata = {
   title: "PAF Transport System",
@@ -14,8 +15,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${poppins.className} `}>
-        <Toast />
-        {children}
+        <StoreProvider>
+          <Toast />
+          {children}
+        </StoreProvider>
       </body>
     </html>
   );

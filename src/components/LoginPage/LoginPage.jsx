@@ -1,15 +1,27 @@
 "use client";
 
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Eye, EyeOff, Loader2Icon } from "lucide-react";
 import Button from "../utils/Button";
 import { toast } from "../utils/Toast";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { setUser } from "@/lib/features/user/userSlice";
 
 export default function LoginPage() {
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
+
+  const user = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user?._id) {
+      window.location.href = "/dashboard";
+    }
+  }, [user]);
 
   const validateForm = () => {
     let isValid = true;
@@ -35,18 +47,21 @@ export default function LoginPage() {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/user/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      setIsLoading(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE}/user/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
       const data = await response.json();
       console.log(data);
-      
+
       if (data?.success) {
         toast.success(data?.message);
-        console.log(data?.data);
-        // redirect here
+        dispatch(setUser(data?.data));      
       } else {
         toast.error(data?.message);
       }
@@ -54,6 +69,7 @@ export default function LoginPage() {
       console.error("Login error:", error);
       toast.error(error.message);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -122,8 +138,8 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <Button type="submit" className="w-full">
-                Log in
+              <Button disabled={isLoading} type="submit" className="w-full">
+                {isLoading ? <Loader2Icon className=" animate-spin mx-auto" /> : "Log in"}
               </Button>
             </div>
           </form>
