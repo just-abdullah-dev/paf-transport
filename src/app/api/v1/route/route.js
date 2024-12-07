@@ -3,6 +3,7 @@ import { userAdminGuard, userAuthGuard } from "@/middleware/user";
 import Bus from "@/models/Bus";
 import Route from "@/models/Route";
 import Stop from "@/models/Stop";
+import Student from "@/models/Student";
 import User from "@/models/User";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
@@ -15,6 +16,7 @@ export async function GET(req) {
     if (!authData?.success) {
       return resError(authData?.message);
     }
+
     const data = await Route.find()
       .populate({
         path: "buses",
@@ -29,10 +31,53 @@ export async function GET(req) {
         model: "Stop",
       });
 
-    if (data.length == 0) {
+    if (data.length < 1) {
       return resError(`Routes not found.`);
     }
-    return NextResponse.json({ success: true, data }, { status: 200 });
+    
+
+    const updatedRoutes = await Promise.all(
+      data.map(async (route) => {
+        // Calculate total students for the route
+        const studentsInRoute = await Student.find({ route: route._id });
+        const totalStudents = studentsInRoute.length;
+
+        // Update each bus with total students
+        const busesWithStudents = await Promise.all(
+          route.buses.map(async (bus) => {
+            const studentsInBus = await Student.find({ bus: bus._id });
+            return {
+              ...bus._doc,
+              totalStudents: studentsInBus.length,
+            };
+          })
+        );
+
+        // Update each stop with total students
+        const stopsWithStudents = await Promise.all(
+          route.stops.map(async (stop) => {
+            const studentsAtStop = await Student.find({ stop: stop._id });
+            return {
+              ...stop._doc,
+              totalStudents: studentsAtStop.length,
+            };
+          })
+        );
+
+        // Return the updated route
+        return {
+          ...route._doc,
+          totalStudents,
+          buses: busesWithStudents,
+          stops: stopsWithStudents,
+        };
+      })
+    );
+
+    return NextResponse.json(
+      { success: true, data: updatedRoutes },
+      { status: 200 }
+    );
   } catch (error) {
     return resError(error?.message);
   }
@@ -42,13 +87,14 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     await connectDB();
+    console.log("yes it runs");
+
+    // const authData = await userAdminGuard(req);
+    // if (!authData?.success) {
+    //   return resError(authData?.message);
+    // }
 
     const { name, road, city, buses, stops } = await req.json();
-
-    const authData = await userAdminGuard(req);
-    if (!authData?.success) {
-      return resError(authData?.message);
-    }
 
     if (!name || !city || !road) {
       return resError("One or more fields are missing.");
@@ -108,6 +154,7 @@ export async function POST(req) {
     return NextResponse.json(
       {
         success: true,
+        message: "Route has been registered.",
         data: route,
       },
       { status: 201 }
@@ -191,12 +238,15 @@ export async function DELETE(req) {
 
       await Promise.all(userUpdates);
       console.log("User bus fields updated successfully.");
+
+      await Bus.deleteAll({ route: routeId });
     } else {
       console.log("No buses found for the given route.");
     }
-    await Bus.deleteAll({ route: routeId });
 
-    await Stop.deleteAll({ route: routeId });
+    if (route.stops.length) {
+      await Stop.deleteAll({ route: routeId });
+    }
 
     return NextResponse.json(
       {

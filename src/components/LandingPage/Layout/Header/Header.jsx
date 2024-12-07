@@ -6,13 +6,13 @@ import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function Header() {
+export default function Header({border=false}) {
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   return (
-    <header className=" bg-transparent fixed w-full top-0 left-0 z-50 backdrop-blur-md">
+    <header className={` ${border ? " border-b border-black ":"" } bg-transparent fixed w-full top-0 left-0 z-50 backdrop-blur-lg`}>
       <div className="container flex w-full py-4 items-center max-w-7xl px-8 xl:px-0 mx-auto">
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <div className="w-full flex-1">
@@ -39,7 +39,7 @@ export default function Header() {
                 />
                 <div
                   className={` ${
-                    isProfileOpen ? "opacity-100" : "opacity-0"
+                    isProfileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                   } duration-500 transition-all bg-white rounded-lg overflow-hidden backdrop-blur-sm absolute top-[28px] right-0 text-sm`}
                 >
                   <p

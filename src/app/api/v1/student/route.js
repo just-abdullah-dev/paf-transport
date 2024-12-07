@@ -38,8 +38,8 @@ export async function GET(req) {
           path: "routeVoucher",
           populate: {
             path: "feeInterval",
-          }
-        }
+          },
+        },
       })
       .populate({
         path: "route",
@@ -144,17 +144,18 @@ export async function PUT(req) {
     if (!std) {
       return resError("Student was not found.");
     }
-
+    
     std.name = name || std.name;
     std.email = email || std.email;
     std.reg = reg || std.reg;
     std.program = program || std.program;
     std.department = department || std.department;
-    std.stopId = stopId || std.stopId;
-    std.routeId = routeId || std.routeId;
-    std.busId = busId || std.busId;
+    std.route = routeId || std.route;
+    std.stop = stopId || std.stop;
+    std.bus = busId || std.bus;
 
     await std.save();
+    console.log(std);
 
     return NextResponse.json(
       {

@@ -18,18 +18,20 @@ export async function GET(req) {
 
     let query = {};
 
-   if (role === "admin") {
+    if (role === "admin") {
       query = { role: "admin" };
     } else if (role === "driver") {
-        query = { role: "driver" };
+      query = { role: "driver" };
+    } else if (role === "free-driver") {
+      query = { role: "driver", bus: null };
     } else if (role === "bank") {
-        query = { role: "bank" };
-      }
+      query = { role: "bank" };
+    }
 
     const data = await User.find(query).select("-password").populate("bus");
 
     if (data.length == 0) {
-      return resError(`Users not found.`);
+      return resError(`${role} not found.`);
     }
     return NextResponse.json({ success: true, data }, { status: 200 });
   } catch (error) {
@@ -175,10 +177,10 @@ export async function DELETE(req) {
       return resError("User was not found.");
     }
 
-    if(user.role === "driver"){
-        let bus = await Bus.findById(user.bus);
-        bus.driver = null;
-        await bus.save();
+    if (user.role === "driver") {
+      let bus = await Bus.findById(user.bus);
+      bus.driver = null;
+      await bus.save();
     }
 
     return NextResponse.json(

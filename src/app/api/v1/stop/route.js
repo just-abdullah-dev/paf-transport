@@ -43,7 +43,7 @@ export async function POST(req) {
       return resError(authData?.message);
     }
 
-    if (!name || !pickTime || !dropTime) {
+    if (!name || !pickTime || !dropTime ||!routeId) {
       return resError("One or more fields are missing.");
     }
 

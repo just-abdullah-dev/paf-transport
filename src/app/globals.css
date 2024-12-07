@@ -10,3 +10,7 @@
   .inputTag{
     @apply py-2 px-4 rounded-md outline-none bg-gray-300 ;
   }
+
+  .thTag{
+    @apply border border-gray-300 p-2;
+  }

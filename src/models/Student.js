@@ -6,12 +6,10 @@ const studentSchema = mongoose.Schema({
   reg: { type: String, required: true },
   program: { type: String },
   department: { type: String },
-  stop: { type: mongoose.Schema.Types.ObjectId, ref: "Stop" },
   route: { type: mongoose.Schema.Types.ObjectId, ref: "Route" },
+  stop: { type: mongoose.Schema.Types.ObjectId, ref: "Stop" },
   bus: { type: mongoose.Schema.Types.ObjectId, ref: "Bus" },
-  fees: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "StudentVoucher" },
-  ],
+  fees: [{ type: mongoose.Schema.Types.ObjectId, ref: "StudentVoucher" },],
 });
 
 let Student;

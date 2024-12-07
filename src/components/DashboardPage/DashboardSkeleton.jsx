@@ -16,17 +16,15 @@ import {
   UsersRound,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Header from "../LandingPage/Layout/Header/Header";
 import { toast } from "../utils/Toast";
 
 export default function DashboardSkeleton({ children }) {
-  const dispatch = useAppDispatch();
   const [dashboardMenu, setDashboardMenu] = useState([]);
 
   const user = useAppSelector((state) => state.user);
-  const router = useRouter();
   const pathname = usePathname();
   const arr = pathname.split("/");
   const currentWindow = arr[arr.length - 1];
@@ -66,8 +64,8 @@ export default function DashboardSkeleton({ children }) {
       icon: <User2Icon size={28} />,
     },
     {
-      name: "Route",
-      path: "route",
+      name: "Routes",
+      path: "routes",
       icon: <Route size={28} />,
     },
     {
@@ -170,7 +168,7 @@ export default function DashboardSkeleton({ children }) {
 
   return (
     <div className="">
-      <Header />
+      <Header border />
       <div className=" flex items-start">
         <div
           className={`${
@@ -186,7 +184,7 @@ export default function DashboardSkeleton({ children }) {
                 ? "w-[64%] sm:w-[44%] md:w-[30%] lg:w-[16%]"
                 : "w-[10%] sm:w-[8%] md:w-[6%] lg:w-[4%]"
             }
-               border-r h-screen border-black dark:border-white flex flex-col overflow-hidden fixed top-[72px] z-50 transition-all duration-1000 `}
+               border-r h-screen border-black flex flex-col overflow-hidden fixed top-[69px] z-50 transition-all duration-1000 `}
         >
           {/* side bar open & close btn  */}
           <button
@@ -200,13 +198,13 @@ export default function DashboardSkeleton({ children }) {
               <div
                 className={`${
                   !openSidebar && " justify-center"
-                } flex items-center gap-4 bg-gray-700 text-gray-300 dark:bg-gray-300 dark:text-gray-800 py-2`}
+                } flex items-center gap-4 bg-gray-300 py-2`}
               >
                 <ChevronLeftIcon className=" ml-2" size={32} />
                 <p className="">Close Sidebar</p>
               </div>
             ) : (
-              <div className="bg-gray-700 text-gray-300 dark:bg-gray-300 dark:text-gray-800 py-2 pl-2">
+              <div className="bg-gray-300 py-2 pl-2">
                 <ChevronRightIcon size={32} />
               </div>
             )}
@@ -217,7 +215,7 @@ export default function DashboardSkeleton({ children }) {
               <Link
                 className={`${!openSidebar && " justify-center"} ${
                   currentWindow === opt?.path &&
-                  " bg-gray-800 text-gray-200 dark:bg-gray-200 dark:text-gray-800"
+                  " bg-gray-800 text-gray-200  "
                 } 
               flex items-center gap-4 hover:scale-105 duration-300 py-2 px-2 transition-all`}
                 href={
@@ -239,7 +237,7 @@ export default function DashboardSkeleton({ children }) {
             openSidebar
               ? "w-[36%] sm:w-[56%] md:w-[70%] lg:w-[84%]"
               : "w-[90%] sm:w-[92%] md:w-[94%] lg:w-[96%]"
-          } transition-all duration-1000 h-fit min-h-screen mt-16`}
+          } transition-all duration-1000 h-fit min-h-screen mt-16 `}
         >
           {children}
         </div>

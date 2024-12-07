@@ -32,7 +32,7 @@ export default function Button({
       } 
       ${
         variant === "danger"
-          ? "bg-gradient-to-tl from-[#333333] to-red-500 bg-[length:135%_135%] hover:bg-[length:110%_110%]"
+          ? "bg-gradient-to-tl from-black/70 to-red-500 bg-[length:175%_175%] hover:bg-[length:150%_150%]"
           : ""
       } 
       ${

@@ -4,10 +4,5 @@ import DashboardSkeleton from "@/components/DashboardPage/DashboardSkeleton";
 import React from "react";
 
 export default function Page() {
-
-  return (
-    <DashboardSkeleton>
-      <DashboardPage />
-    </DashboardSkeleton>
-  );
+  return <DashboardPage />;
 }

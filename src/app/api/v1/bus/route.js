@@ -66,10 +66,15 @@ export async function POST(req) {
       seats,
       status,
     });
-
-    let route = await Route.findById(routeId);
-    route.buses.push(bus?._id);
-    await route.save();
+    
+    if (routeId) {
+      let route = await Route.findById(routeId);
+      if (!route) {
+        return resError("Route was not found.");
+      }
+      route.buses.push(bus?._id);
+      await route.save();
+    }
 
     let user = await User.findById(driver);
     user.bus = bus?._id;
@@ -174,12 +179,14 @@ export async function DELETE(req) {
     route.buses = route.buses.filter((bus) => bus !== busId);
     await route.save();
 
-    let user = await User.findById(bus.driver);
-    if (!user) {
-      return resError("User was not found.");
+    if (bus.driver) {
+      let user = await User.findById(bus.driver);
+      if (!user) {
+        return resError("User was not found.");
+      }
+      user.bus = null;
+      await user.save();
     }
-    user.bus = null;
-    await user.save();
 
     await Bus.findByIdAndDelete(busId);
 
