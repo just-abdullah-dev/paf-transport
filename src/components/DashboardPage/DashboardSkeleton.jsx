@@ -5,6 +5,8 @@ import {
   Bus,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ChevronsLeftRightEllipsis,
+  Coins,
   FileChartColumn,
   HandCoins,
   LayoutDashboard,
@@ -14,6 +16,7 @@ import {
   Users,
   UserSearch,
   UsersRound,
+  WalletCards,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -79,9 +82,14 @@ export default function DashboardSkeleton({ children }) {
       icon: <Users size={28} />,
     },
     {
+      name: "Fee Structure",
+      path: "fee-structure",
+      icon: <WalletCards size={28} />,
+    },
+    {
       name: "Fee Interval",
-      path: "fee-interval",
-      icon: <HandCoins size={28} />,
+      path: "fee-intervals",
+      icon: <ChevronsLeftRightEllipsis size={28} />,
     },
     {
       name: "Fee Vouchers",
@@ -96,7 +104,7 @@ export default function DashboardSkeleton({ children }) {
     {
       name: "Update Fee",
       path: "update-fee",
-      icon: <Banknote size={28} />,
+      icon: <HandCoins size={28} />,
     },
     {
       name: "Reports",

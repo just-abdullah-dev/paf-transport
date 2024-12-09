@@ -30,6 +30,17 @@ export const getStudents = async (token) => {
   return data;
 };
 
+export const getRouteFee = async (token, routeId="") => {
+  const data = fetchTable(`/fee?routeId=${routeId}`, token);
+  return data;
+};
+
+export const getFeeIntervals = async (token, {year="", month=""}) => {
+  const data = fetchTable(`/fee/interval?year=${year}&month=${month}`, token);
+  
+  return data;
+};
+
 export const getAvailableDrivers = async (token) => {
   const data = fetchTable("/user?role=free-driver", token);
   return data;
@@ -50,6 +61,24 @@ export const deleteRoute = async (routeId, token) => {
     return data;
   } catch (error) {
     console.error("Error while deleting route:", error);
+  }
+};
+
+export const deleteFee = async (feeId, token) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/fee`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ feeId }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error while deleting fee structure:", error);
   }
 };
 
@@ -109,3 +138,26 @@ export const deleteStudent = async (stdId, token) => {
     console.error("Error while deleting student:", error);
   }
 };
+
+export const deleteFeeInterval = async (feeIntervalId, token) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE}/fee/interval`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ feeIntervalId }),
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error while deleting fee interval:", error);
+  }
+};
+
+

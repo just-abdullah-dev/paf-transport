@@ -111,7 +111,7 @@ export async function POST(req) {
     const feeInterval = await FeeInterval.create({
       from,
       to,
-      noOfMonths: noOfMonths.toFixed(2),
+      noOfMonths: Math.round(noOfMonths),
       namesOfMonths,
       issueDate,
       dueDate,

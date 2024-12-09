@@ -4,34 +4,20 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "@/lib/hooks";
 import Button from "@/components/utils/Button";
 import {
-  getstds,
-  deleteBus,
-  deleteStop,
-  deleteRoute,
   getStudents,
   deleteStudent,
 } from "@/services";
-import Link from "next/link";
 import convertTo12HourFormat from "@/utils/formatTime";
 import RegisterStd from "./RegisterStd";
 import { Search, SquarePen, Trash2 } from "lucide-react";
-import EditBus from "./EditBus";
-import EditStop from "./EditStop";
 import { toast } from "@/components/utils/Toast";
 import EditStd from "./EditStd";
-import AddBus from "./AddBus";
-import AddStop from "./AddStop";
 
 export default function Students() {
   const [openStdId, setOpenStdId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   const [editStd, setEditStd] = useState({});
-  const [editBus, setEditBus] = useState({});
-  const [editStop, setEditStop] = useState({});
-
-  const [addBus, setAddBus] = useState("");
-  const [addStop, setAddStop] = useState("");
   const [registerStd, setRegisterStd] = useState(false);
 
   const user = useAppSelector((state) => state.user);
@@ -84,37 +70,8 @@ export default function Students() {
     }
   };
 
-  const handleDeleteBus = async (id) => {
-    if (window.confirm("Do you really want to delete this bus?")) {
-      const data = await deleteBus(id, user.token);
-      if (data?.success) {
-        toast.success(data?.message);
-        window.location.reload();
-      } else {
-        toast.error(data?.message);
-      }
-    }
-  };
-
-  const handleDeleteStop = async (id) => {
-    if (window.confirm("Do you really want to delete this stop?")) {
-      const data = await deleteStop(id, user.token);
-      if (data?.success) {
-        toast.success(data?.message);
-        window.location.reload();
-      } else {
-        toast.error(data?.message);
-      }
-    }
-  };
-
   const handleCloseModal = () => {
-    setEditBus(null);
-    setEditStop(null);
     setEditStd(null);
-    setAddBus(false);
-    setAddStop(false);
-
     setRegisterStd(false);
     window.location.reload();
   };
@@ -386,13 +343,6 @@ export default function Students() {
 
       {/* register std  */}
       {registerStd && <RegisterStd onClose={handleCloseModal} />}
-      {/* edit bus  */}
-      {editBus?._id && <EditBus data={editBus} onClose={handleCloseModal} />}
-
-      {/* add stop  */}
-      {addStop && <AddStop routeId={addStop} onClose={handleCloseModal} />}
-      {/* edit stop  */}
-      {editStop?._id && <EditStop data={editStop} onClose={handleCloseModal} />}
     </>
   );
 }
