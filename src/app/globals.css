@@ -7,6 +7,11 @@
     @apply bg-gradient-to-r from-primary via-secondary to-secondary bg-[length:110%_110%] hover:bg-[length:180%_180%]  bg-clip-text text-transparent duration-300 transition-all;
   }
 
+  
+.bg-custom-gradient {
+  @apply rounded-lg py-2 px-4 text-white font-[500] duration-300 transition-all bg-gradient-to-tl from-primary to-secondary bg-[length:135%_135%] hover:bg-[length:102%_102%];
+}
+
   .inputTag{
     @apply py-2 px-4 rounded-md outline-none bg-gray-300 ;
   }
