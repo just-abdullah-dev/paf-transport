@@ -176,7 +176,7 @@ export default function DashboardSkeleton({ children }) {
 
   return (
     <div className="">
-      <Header border />
+      <Header />
       <div className=" flex items-start">
         <div
           className={`${
@@ -189,10 +189,10 @@ export default function DashboardSkeleton({ children }) {
           className={`
             ${
               openSidebar
-                ? "w-[64%] sm:w-[44%] md:w-[30%] lg:w-[16%]"
-                : "w-[10%] sm:w-[8%] md:w-[6%] lg:w-[4%]"
+                ? "w-[64%] sm:w-[44%] md:w-[30%] lg:w-[16%] px-2"
+                : "w-[10%] sm:w-[8%] md:w-[6%] lg:w-[4%] px-[2px]"
             }
-               border-r h-screen border-black flex flex-col overflow-hidden fixed top-[69px] z-50 transition-all duration-1000 `}
+                h-screen flex flex-col overflow-hidden fixed top-[69px] z-50 transition-all duration-1000 `}
         >
           {/* side bar open & close btn  */}
           <button
@@ -200,19 +200,19 @@ export default function DashboardSkeleton({ children }) {
               setOpenSidebar(!openSidebar);
             }}
             title={openSidebar ? "Close Sidebar" : "Open Sidebar"}
-            className="hover:scale-105 duration-300"
+            className="hover:scale-105 duration-300 "
           >
             {openSidebar ? (
               <div
                 className={`${
                   !openSidebar && " justify-center"
-                } flex items-center gap-4 bg-gray-300 py-2`}
+                } flex items-center gap-4  py-2 `}
               >
                 <ChevronLeftIcon className=" ml-2" size={32} />
                 <p className="">Close Sidebar</p>
               </div>
             ) : (
-              <div className="bg-gray-300 py-2 pl-2">
+              <div className=" py-2 pl-2">
                 <ChevronRightIcon size={32} />
               </div>
             )}
@@ -223,9 +223,9 @@ export default function DashboardSkeleton({ children }) {
               <Link
                 className={`${!openSidebar && " justify-center"} ${
                   currentWindow === opt?.path &&
-                  " bg-gray-800 text-gray-200  "
+                  " bg-gradient-to-tl text-white  "
                 } 
-              flex items-center gap-4 hover:scale-105 duration-300 py-2 px-2 transition-all`}
+              flex items-center gap-4 rounded-lg hover:text-white font-[500] hover:bg-gradient-to-tl from-primary to-secondary  py-2 px-2`}
                 href={
                   opt?.path === "dashboard"
                     ? `/${opt?.path}`

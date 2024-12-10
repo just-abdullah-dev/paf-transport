@@ -5,7 +5,7 @@ import { Eye, EyeOff, Loader2Icon } from "lucide-react";
 import Button from "../utils/Button";
 import { toast } from "../utils/Toast";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { setUser } from "@/lib/features/user/userSlice";
+import { clearUser, setUser } from "@/lib/features/user/userSlice";
 
 export default function LoginPage() {
   const dispatch = useAppDispatch();

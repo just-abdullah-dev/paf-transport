@@ -7,18 +7,13 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import Button from "@/components/utils/Button";
 import { Loader2Icon } from "lucide-react";
 
-export default function Profile() {
+export default function Profile({ data, onClose }) {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const user = useAppSelector((state) => state.user);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [formData, setFormData] = useState({
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    phone: user.phone,
-    address: user.address,
-    busId: user.busId,
+    ...data
   });
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -37,7 +32,7 @@ export default function Profile() {
     if (showPasswordForm) {
       if (password !== confirmPassword) {
         toast.error("Passwords do not match");
-        setIsLoading(false)
+        setIsLoading(false);
         return;
       }
     }
@@ -50,8 +45,8 @@ export default function Profile() {
         },
         body: JSON.stringify(
           showPasswordForm
-            ? { ...formData, password, userId: user._id }
-            : { ...formData, userId: user._id }
+            ? { ...formData, password, userId: formData._id }
+            : { ...formData, userId: formData._id }
         ),
       });
 
@@ -59,10 +54,14 @@ export default function Profile() {
 
       if (data?.success) {
         toast.success(data?.message);
-        if(showPasswordForm){
-            setShowPasswordForm(false);
+        if (showPasswordForm) {
+          setShowPasswordForm(false);
         }
-        dispatch(setUser({ ...data?.data, token: user.token }));
+        if (data?.token) {
+          dispatch(setUser({ ...data?.data, token: user.token }));
+        }
+        onClose();
+        window.location.reload();
       } else {
         toast.error(data?.message);
       }
@@ -74,7 +73,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="container mx-auto my-8 max-w-[90%] text-sm ">
+    <div className="container mx-auto my-8 max-w-[95%] text-sm ">
       <div className="mb-8">
         <div>
           <h1 className=" text-2xl md:text-3xl font-semibold mb-6 text-custom-gradient w-fit">
@@ -102,7 +101,7 @@ export default function Profile() {
                   Email
                 </label>
                 <input
-                  disabled={true}
+                  disabled={formData?.token ? true : false}
                   className="inputTag w-full disabled:opacity-85 disabled:cursor-not-allowed"
                   id="email"
                   name="email"

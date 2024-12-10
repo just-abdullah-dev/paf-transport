@@ -177,10 +177,12 @@ export async function DELETE(req) {
       return resError("User was not found.");
     }
 
-    if (user.role === "driver") {
-      let bus = await Bus.findById(user.bus);
-      bus.driver = null;
-      await bus.save();
+    if (user?.role === "driver" && user?.bus) {
+      let bus = await Bus.findById(user?.bus);
+      if (bus) {
+        bus.driver = null;
+        await bus.save();
+      }
     }
 
     return NextResponse.json(

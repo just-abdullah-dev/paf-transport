@@ -54,7 +54,7 @@ export default function UpdateFee({ checkFee = false }) {
 
   return (
     <>
-      <div className="container mx-auto my-8 max-w-[90%] text-sm ">
+      <div className="container mx-auto my-8 max-w-[95%] text-sm ">
         <div className="mb-8 w-full">
           <div
             className={` ${isLoading ? "animate-pulse " : ""}

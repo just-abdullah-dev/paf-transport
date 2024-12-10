@@ -1,7 +1,7 @@
-import Profile from '@/components/DashboardPage/Profile/Profile'
+import ProfilePage from '@/components/DashboardPage/Profile/ProfilePage'
 import React from 'react'
 
 export default function page() {
-  return (<Profile />
+  return (<ProfilePage />
   )
 }

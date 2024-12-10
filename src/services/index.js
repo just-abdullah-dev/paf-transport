@@ -27,7 +27,7 @@ export const getBuses = async (token) => {
 
 export const getStudents = async (
   token,
-  { search = "", routeId = "", busId = "", stopId = "" }={}
+  { search = "", routeId = "", busId = "", stopId = "" } = {}
 ) => {
   const data = fetchTable(
     `/student?search=${search}&routeId=${routeId}&bu
@@ -37,12 +37,20 @@ sId=${busId}&stopId=${stopId}`,
   return data;
 };
 
+export const getUsers = async (token, role = "") => {
+  const data = fetchTable(`/user?role=${role}`, token);
+  return data;
+};
+
 export const getRouteFee = async (token, routeId = "") => {
   const data = fetchTable(`/fee?routeId=${routeId}`, token);
   return data;
 };
 
-export const getFeeIntervals = async (token, { year = "", month = "" }={}) => {
+export const getFeeIntervals = async (
+  token,
+  { year = "", month = "" } = {}
+) => {
   const data = fetchTable(`/fee/interval?year=${year}&month=${month}`, token);
 
   return data;
@@ -143,6 +151,27 @@ export const deleteStudent = async (stdId, token) => {
     return data;
   } catch (error) {
     console.error("Error while deleting student:", error);
+  }
+};
+
+export const deleteUser = async (userId, token) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE}/user`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId }),
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error while deleting user:", error);
   }
 };
 
