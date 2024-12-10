@@ -1,5 +1,5 @@
 "use client";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useAppSelector } from "@/lib/hooks";
 import {
   Banknote,
   Bus,
@@ -35,7 +35,10 @@ export default function DashboardSkeleton({ children }) {
   useEffect(() => {
     if (!user?._id) {
       window.location.href = "/login";
-      toast.error("Login First.")
+      toast.error("Login First.");
+    } else if (checkPageAccess()) {
+      window.location.href = "/dashboard";
+      toast.error("Access Restricted.");
     } else {
       switch (user.role) {
         case "admin":
@@ -55,6 +58,7 @@ export default function DashboardSkeleton({ children }) {
   }, [user]);
 
   const [openSidebar, setOpenSidebar] = useState(true);
+
   const adminMenu = [
     {
       name: "Dashboard",
@@ -160,7 +164,11 @@ export default function DashboardSkeleton({ children }) {
     {
       name: "Bus & Students",
       path: "bus-&-students",
-      icon: <><Bus size={22} /> <Users size={22} /></>,
+      icon: (
+        <>
+          <Bus size={22} /> <Users size={22} />
+        </>
+      ),
     },
     {
       name: "Fee Intervals",
@@ -174,6 +182,25 @@ export default function DashboardSkeleton({ children }) {
     },
   ];
 
+  const checkPageAccess = () => {
+    // Define menus based on roles
+    const menus = {
+      admin: adminMenu,
+      bank: bankMenu,
+      driver: driverMenu,
+    };
+
+    // Get the menu for the user's role
+    const userMenu = menus[user?.role] || [];
+
+    // Check if the current page path exists in the user's menu
+    const hasAccess = userMenu.some(
+      (menuItem) => menuItem.path === currentWindow
+    );
+
+    // Return true for unauthorized access and false for authorized access
+    return !hasAccess;
+  };
   return (
     <div className="">
       <Header />
