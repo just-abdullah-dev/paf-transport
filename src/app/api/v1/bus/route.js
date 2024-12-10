@@ -2,8 +2,10 @@ import connectDB from "@/lib/db";
 import { userAdminGuard, userAuthGuard } from "@/middleware/user";
 import Bus from "@/models/Bus";
 import Route from "@/models/Route";
+import Student from "@/models/Student";
 import User from "@/models/User";
 import resError from "@/utils/resError";
+import { model } from "mongoose";
 import { NextResponse } from "next/server";
 
 // 10.
@@ -14,19 +16,103 @@ export async function GET(req) {
     if (!authData?.success) {
       return resError(authData?.message);
     }
-    const data = await Bus.find()
-      .populate({
+
+    const { searchParams } = new URL(req.url);
+    const busId = searchParams.get("busId");
+    let data;
+
+    if (busId) {
+      // Fetch a single bus by ID
+      data = await Bus.findById(busId).populate({
         path: "route",
-      })
-      .populate({
-        path: "driver",
-        select: "-password",
+        populate: {
+          path: "stops",
+          model: "Stop",
+        },
       });
 
-    if (data.length == 0) {
-      return resError(`Buses not found.`);
+      if (!data) {
+        return resError(`Bus not found.`);
+      }
+
+      // Calculate total students for the bus
+      const studentsInBus = await Student.find({ bus: data._id });
+      const totalStudents = studentsInBus.length;
+
+      // Update stops in the route with total students
+      const stopsWithStudents = await Promise.all(
+        data.route.stops.map(async (stop) => {
+          const studentsAtStop = await Student.find({ stop: stop._id });
+          return {
+            ...stop._doc,
+            totalStudents: studentsAtStop.length,
+          };
+        })
+      );
+
+      // Return the updated bus with total students and updated stops
+      return NextResponse.json(
+        {
+          success: true,
+          data: {
+            ...data._doc,
+            totalStudents,
+            route: {
+              ...data.route._doc,
+              stops: stopsWithStudents,
+            },
+          },
+        },
+        { status: 200 }
+      );
+    } else {
+      // Fetch all buses
+      data = await Bus.find()
+        .populate({
+          path: "route",
+        })
+        .populate({
+          path: "driver",
+          select: "-password",
+        });
+
+      if (data.length === 0) {
+        return resError(`Buses not found.`);
+      }
+
+      // Update each bus with total students
+      const busesWithStudents = await Promise.all(
+        data.map(async (bus) => {
+          const studentsInBus = await Student.find({ bus: bus._id });
+          const totalStudents = studentsInBus.length;
+
+          // Update stops in the route with total students
+          const stopsWithStudents = await Promise.all(
+            bus.route.stops.map(async (stop) => {
+              const studentsAtStop = await Student.find({ stop: stop._id });
+              return {
+                ...stop._doc,
+                totalStudents: studentsAtStop.length,
+              };
+            })
+          );
+
+          return {
+            ...bus._doc,
+            totalStudents,
+            route: {
+              ...bus.route._doc,
+              stops: stopsWithStudents,
+            },
+          };
+        })
+      );
+
+      return NextResponse.json(
+        { success: true, data: busesWithStudents },
+        { status: 200 }
+      );
     }
-    return NextResponse.json({ success: true, data }, { status: 200 });
   } catch (error) {
     return resError(error?.message);
   }
@@ -66,7 +152,7 @@ export async function POST(req) {
       seats,
       status,
     });
-    
+
     if (routeId) {
       let route = await Route.findById(routeId);
       if (!route) {

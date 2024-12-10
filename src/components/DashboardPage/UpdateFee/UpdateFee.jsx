@@ -75,7 +75,12 @@ export default function UpdateFee({ checkFee = false }) {
                   className="inputTag w-[40%]"
                   placeholder="Search by name, reg"
                   value={searchKeyword}
-                  onChange={(e) => setSearchKeyword(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value === "") {
+                      setStudents([]);
+                    }
+                    setSearchKeyword(e.target.value);
+                  }}
                 />
               </div>
               <Search

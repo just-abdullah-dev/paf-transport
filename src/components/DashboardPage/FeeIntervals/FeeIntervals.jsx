@@ -101,16 +101,19 @@ export default function FeeIntervals() {
                 ? "Create a Fee Interval"
                 : `Fee Intervals (${data?.success ? feeIntervals.length : 0})`}
             </h1>
-            <Button
-              type="button"
-className=" text-base"
-              variant={registerFeeInterval ? "danger" : "info"}
-              onClick={() => {
-                setRegisterFeeInterval(!registerFeeInterval);
-              }}
-            >
-              {registerFeeInterval ? "Close" : "Create a Fee Interval"}
-            </Button>
+
+            {user?.role === "admin" && (
+              <Button
+                type="button"
+                className=" text-base"
+                variant={registerFeeInterval ? "danger" : "info"}
+                onClick={() => {
+                  setRegisterFeeInterval(!registerFeeInterval);
+                }}
+              >
+                {registerFeeInterval ? "Close" : "Create a Fee Interval"}
+              </Button>
+            )}
           </div>
 
           <div>
@@ -152,7 +155,8 @@ className=" text-base"
                   <th className="thTag">Issue Date</th>
                   <th className="thTag">Due Date</th>
                   <th className="thTag">Voucher Status</th>
-                  <th className="thTag">Actions</th>
+
+                  {user?.role === "admin" && <th className="thTag">Actions</th>}
                 </tr>
               </thead>
               {data?.success ? (
@@ -172,7 +176,7 @@ className=" text-base"
                       <>
                         <tr
                           key={feeInterval._id}
-                          className={`cursor-pointer hover:bg-gray-300/80 `}
+                          className={` hover:bg-gray-300/80 `}
                         >
                           <td className="thTag">{index + 1}</td>
                           <td className="thTag">
@@ -198,28 +202,30 @@ className=" text-base"
                               ? "Generated"
                               : "Not Generated"}
                           </td>
-                          <td className="thTag flex w-full h-full gap-2 items-center justify-around">
-                            <SquarePen
-                              onClick={() => {
-                                if (
-                                  feeInterval?.voucherStatus === "generated"
-                                ) {
-                                  setErrorModal(
-                                    "Vouchers for this fee interval has been generated. Delete the generated vouchers first."
-                                  );
-                                } else {
-                                  setEditFeeInterval(feeInterval);
+                          {user?.role === "admin" && (
+                            <td className="thTag flex w-full h-full gap-2 items-center justify-around">
+                              <SquarePen
+                                onClick={() => {
+                                  if (
+                                    feeInterval?.voucherStatus === "generated"
+                                  ) {
+                                    setErrorModal(
+                                      "Vouchers for this fee interval has been generated. Delete the generated vouchers first."
+                                    );
+                                  } else {
+                                    setEditFeeInterval(feeInterval);
+                                  }
+                                }}
+                                className=" cursor-pointer w-5 h-5"
+                              />
+                              <Trash2
+                                onClick={() =>
+                                  handleDeleteFeeInterval(feeInterval?._id)
                                 }
-                              }}
-                              className=" cursor-pointer w-5 h-5"
-                            />
-                            <Trash2
-                              onClick={() =>
-                                handleDeleteFeeInterval(feeInterval?._id)
-                              }
-                              className=" cursor-pointer w-5 h-5 stroke-red-500"
-                            />
-                          </td>
+                                className=" cursor-pointer w-5 h-5 stroke-red-500"
+                              />
+                            </td>
+                          )}
                         </tr>
                       </>
                     ))}

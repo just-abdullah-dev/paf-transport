@@ -88,6 +88,8 @@ export default function Students() {
                 ? "Register a Student"
                 : `Students (${data?.success ? stds.length : 0})`}
             </h1>
+            
+            {user?.role === "admin" &&
             <Button
               type="button"
               className=" text-base"
@@ -97,7 +99,7 @@ export default function Students() {
               }}
             >
               {registerStd ? "Close" : "Register a Student"}
-            </Button>
+            </Button>}
           </div>
 
           <div>
@@ -125,7 +127,8 @@ export default function Students() {
                   <th className="thTag">Department</th>
                   <th className="thTag">Program</th>
                   <th className="thTag">Route</th>
-                  <th className="thTag">Actions</th>
+
+                  {user?.role === "admin" && <th className="thTag">Actions</th>}
                 </tr>
               </thead>
               {data?.success ? (
@@ -166,18 +169,20 @@ export default function Students() {
                               ? std?.route?.name
                               : "No route assigned."}
                           </td>
-                          <td className="thTag flex w-full h-full gap-2 items-center justify-around">
-                            <SquarePen
-                              onClick={() => {
-                                setEditStd(std);
-                              }}
-                              className=" cursor-pointer w-5 h-5"
-                            />
-                            <Trash2
-                              onClick={() => handleDeleteStudent(std?._id)}
-                              className=" cursor-pointer w-5 h-5 stroke-red-500"
-                            />
-                          </td>
+                          {user?.role === "admin" && (
+                            <td className="thTag flex w-full h-full gap-2 items-center justify-around">
+                              <SquarePen
+                                onClick={() => {
+                                  setEditStd(std);
+                                }}
+                                className=" cursor-pointer w-5 h-5"
+                              />
+                              <Trash2
+                                onClick={() => handleDeleteStudent(std?._id)}
+                                className=" cursor-pointer w-5 h-5 stroke-red-500"
+                              />
+                            </td>
+                          )}
                         </tr>
 
                         {openStdId === std?._id && (
@@ -306,9 +311,15 @@ export default function Students() {
                                           </td>
 
                                           <td className="thTag">
-                                            {fee?.status === "paid"
-                                              ? <span className=" text-green-600 font-semibold">Paid</span>
-                                              :<span className=" text-red-600 font-semibold">Not Paid</span>}
+                                            {fee?.status === "paid" ? (
+                                              <span className=" text-green-600 font-semibold">
+                                                Paid
+                                              </span>
+                                            ) : (
+                                              <span className=" text-red-600 font-semibold">
+                                                Not Paid
+                                              </span>
+                                            )}
                                           </td>
                                           <td className="thTag">
                                             {fee?.notes}

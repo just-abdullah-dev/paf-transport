@@ -135,9 +135,9 @@ export default function DashboardSkeleton({ children }) {
       icon: <Users size={28} />,
     },
     {
-      name: "Fee Interval",
-      path: "fee-interval",
-      icon: <HandCoins size={28} />,
+      name: "Fee Intervals",
+      path: "fee-intervals",
+      icon: <ChevronsLeftRightEllipsis size={28} />,
     },
     {
       name: "Update Fee",
@@ -160,12 +160,12 @@ export default function DashboardSkeleton({ children }) {
     {
       name: "Bus & Students",
       path: "bus-&-students",
-      icon: <Bus size={28} />,
+      icon: <><Bus size={22} /> <Users size={22} /></>,
     },
     {
-      name: "Fee Interval",
-      path: "fee-interval",
-      icon: <HandCoins size={28} />,
+      name: "Fee Intervals",
+      path: "fee-intervals",
+      icon: <ChevronsLeftRightEllipsis size={28} />,
     },
     {
       name: "Check Fee",

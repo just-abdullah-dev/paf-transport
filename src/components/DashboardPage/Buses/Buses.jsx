@@ -13,7 +13,6 @@ export default function Buses() {
   const [data, setData] = useState(null);
   const [buses, setBuses] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  
 
   useEffect(() => {
     const main = async () => {
@@ -81,6 +80,8 @@ export default function Buses() {
                 <th className="thTag">Name</th>
                 <th className="thTag">Number</th>
                 <th className="thTag">Seats</th>
+                <th className="thTag">Students</th>
+                <th className="thTag">Free Seats</th>
                 <th className="thTag">Status</th>
                 <th className="thTag">Route</th>
                 <th className="thTag">Driver</th>
@@ -117,6 +118,10 @@ export default function Buses() {
                         <td className="thTag">{bus?.name}</td>
                         <td className="thTag">{bus?.number}</td>
                         <td className="thTag">{bus?.seats}</td>
+                        <td className="thTag">{bus?.totalStudents}</td>
+                        <td className="thTag">
+                          {bus?.seats - bus?.totalStudents}
+                        </td>
                         <td className="thTag">{bus?.status}</td>
                         <td className="thTag">{bus?.route?.name}</td>
                         <td className="thTag">

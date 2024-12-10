@@ -20,8 +20,8 @@ export const getRoutes = async (token) => {
   return data;
 };
 
-export const getBuses = async (token) => {
-  const data = fetchTable("/bus", token);
+export const getBuses = async (token, busId = "") => {
+  const data = fetchTable(`/bus?busId=${busId}`, token);
   return data;
 };
 
@@ -156,17 +156,14 @@ export const deleteStudent = async (stdId, token) => {
 
 export const deleteUser = async (userId, token) => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/user`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ userId }),
-      }
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/user`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userId }),
+    });
 
     const data = await response.json();
     return data;
