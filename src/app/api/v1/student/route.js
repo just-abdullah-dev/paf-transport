@@ -3,9 +3,9 @@ import { userAdminGuard, userAuthGuard } from "@/middleware/user";
 import Student from "@/models/Student";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
+import importModels from "@/models";
 
 importModels();
-  import importModels from "@/models";
 // 18.
 export async function GET(req) {
   try {
@@ -19,6 +19,8 @@ export async function GET(req) {
     const routeId = searchParams.get("routeId");
     const busId = searchParams.get("busId");
     const stopId = searchParams.get("stopId");
+    const search = searchParams.get("search");
+
     let query = {};
     if (routeId) {
       query = { ...query, route: routeId };
@@ -30,6 +32,16 @@ export async function GET(req) {
 
     if (stopId) {
       query = { ...query, stop: stopId };
+    }
+
+    if (search) {
+      query = {
+        ...query,
+        $or: [
+          { name: { $regex: search, $options: "i" } },
+          { reg: { $regex: search, $options: "i" } },
+        ],
+      };
     }
 
     const data = await Student.find(query)
@@ -146,7 +158,7 @@ export async function PUT(req) {
     if (!std) {
       return resError("Student was not found.");
     }
-    
+
     std.name = name || std.name;
     std.email = email || std.email;
     std.reg = reg || std.reg;

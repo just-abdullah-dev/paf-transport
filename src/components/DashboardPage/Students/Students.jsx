@@ -3,15 +3,13 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/lib/hooks";
 import Button from "@/components/utils/Button";
-import {
-  getStudents,
-  deleteStudent,
-} from "@/services";
+import { getStudents, deleteStudent } from "@/services";
 import convertTo12HourFormat from "@/utils/formatTime";
 import RegisterStd from "./RegisterStd";
 import { Search, SquarePen, Trash2 } from "lucide-react";
 import { toast } from "@/components/utils/Toast";
 import EditStd from "./EditStd";
+import formatISODate from "@/utils/formatDate";
 
 export default function Students() {
   const [openStdId, setOpenStdId] = useState("");
@@ -24,6 +22,7 @@ export default function Students() {
   const [data, setData] = useState(null);
   const [stds, setStds] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  console.log(stds);
 
   useEffect(() => {
     const main = async () => {
@@ -73,12 +72,11 @@ export default function Students() {
   const handleCloseModal = () => {
     setEditStd(null);
     setRegisterStd(false);
-    window.location.reload();
   };
 
   return (
     <>
-      <div className="container mx-auto my-8 max-w-[90%] ">
+      <div className="container mx-auto my-8 max-w-[90%] text-sm ">
         <div className="mb-8 w-full">
           <div
             className={` ${isLoading ? "animate-pulse " : ""}
@@ -92,6 +90,7 @@ export default function Students() {
             </h1>
             <Button
               type="button"
+              className=" text-base"
               variant={registerStd ? "danger" : "info"}
               onClick={() => {
                 setRegisterStd(!registerStd);
@@ -124,6 +123,7 @@ export default function Students() {
                   <th className="thTag">Reg #</th>
                   <th className="thTag">Email</th>
                   <th className="thTag">Department</th>
+                  <th className="thTag">Program</th>
                   <th className="thTag">Route</th>
                   <th className="thTag">Actions</th>
                 </tr>
@@ -132,7 +132,7 @@ export default function Students() {
                 stds.length === 0 ? (
                   <tr>
                     <td
-                      colSpan="7"
+                      colSpan="8"
                       className="text-red-500 text-center w-full py-4"
                     >
                       No students were found matching the keyword: {searchQuery}
@@ -160,6 +160,7 @@ export default function Students() {
                           <td className="thTag">{std?.reg}</td>
                           <td className="thTag">{std?.email}</td>
                           <td className="thTag">{std?.department}</td>
+                          <td className="thTag">{std?.program}</td>
                           <td className="thTag">
                             {std?.route?.name
                               ? std?.route?.name
@@ -181,16 +182,8 @@ export default function Students() {
 
                         {openStdId === std?._id && (
                           <tr className=" bg-gray-300/50">
-                            <td colSpan="7" className="thTag">
-                              <div className="space-y-4 px-8 py-4">
-                                {/* Program Information */}
-                                <div>
-                                  <span className="font-semibold">
-                                    Program:
-                                  </span>{" "}
-                                  {std?.program}
-                                </div>
-
+                            <td colSpan="8" className="thTag">
+                              <div className=" px-8 py-4 flex justify-around">
                                 {/* Stop Information */}
                                 {std?.stop?._id && (
                                   <div className="flex flex-col space-y-2">
@@ -244,78 +237,97 @@ export default function Students() {
                                 )}
                               </div>
 
-                              {/* fees Table 
-                                <div className=" flex items-center justify-between p-2">
-                                  <h3 className="font-semibold text-base mb-2">
-                                    Stops
-                                  </h3>
-                                  <Button 
-                                  onClick={()=>{setAddStop(std?._id)}}
-                                  variant="info">Add Stop</Button>
-                                </div>
-                                {std?.stops.length > 0 && (
-                                  <>
-                                    <table className="w-full border-collapse border border-gray-200 mb-6">
-                                      <thead>
-                                        <tr className="bg-gray-200">
-                                          <th className="thTag">Sr #</th>
-                                          <th className="thTag">Name</th>
-                                          <th className="thTag">Pick Time</th>
-                                          <th className="thTag">Drop Time</th>
-                                          <th className="thTag">Actions</th>
+                              <h3 className="font-semibold text-center text-2xl my-4 ">
+                                Fee Record
+                              </h3>
+                              {std?.fees.length > 0 ? (
+                                <>
+                                  <table className="w-full border-collapse border border-gray-200 mb-6">
+                                    <thead>
+                                      <tr className="bg-gray-200">
+                                        <th className="thTag">Sr #</th>
+                                        <th className="thTag">Interval</th>
+
+                                        <th className="thTag">
+                                          Issue & Due Date
+                                        </th>
+                                        <th className="thTag">Total Amount</th>
+                                        <th className="thTag">Fine Per Day</th>
+                                        <th className="thTag">Status</th>
+                                        <th className="thTag">Notes</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {std?.fees.map((fee, index) => (
+                                        <tr
+                                          key={fee?._id}
+                                          className={`cursor-pointer hover:bg-gray-300/80 `}
+                                        >
+                                          <td className="thTag">{index + 1}</td>
+                                          <td className="thTag">
+                                            {formatISODate(
+                                              fee?.routeVoucher?.feeInterval
+                                                ?.from
+                                            )}{" "}
+                                            to{" "}
+                                            {formatISODate(
+                                              fee?.routeVoucher?.feeInterval?.to
+                                            )}
+                                            <br />
+                                            {fee?.routeVoucher?.feeInterval
+                                              ?.namesOfMonths.length > 0
+                                              ? fee?.routeVoucher?.feeInterval?.namesOfMonths.join(
+                                                  ", "
+                                                )
+                                              : ""}{" "}
+                                            (
+                                            {
+                                              fee?.routeVoucher?.feeInterval
+                                                ?.noOfMonths
+                                            }
+                                            )
+                                          </td>
+                                          <td className="thTag">
+                                            {formatISODate(
+                                              fee?.routeVoucher?.feeInterval
+                                                ?.issueDate
+                                            )}{" "}
+                                            -{" "}
+                                            {formatISODate(
+                                              fee?.routeVoucher?.feeInterval
+                                                ?.dueDate
+                                            )}
+                                          </td>
+                                          <td className="thTag">
+                                            {fee?.routeVoucher?.totalAmount}
+                                          </td>
+                                          <td className="thTag">
+                                            {fee?.routeVoucher?.finePerDay}
+                                          </td>
+
+                                          <td className="thTag">
+                                            {fee?.status === "paid"
+                                              ? <span className=" text-green-600 font-semibold">Paid</span>
+                                              :<span className=" text-red-600 font-semibold">Not Paid</span>}
+                                          </td>
+                                          <td className="thTag">
+                                            {fee?.notes}
+                                          </td>
                                         </tr>
-                                      </thead>
-                                      <tbody>
-                                        {std?.stops
-                                          .sort((a, b) =>
-                                            a.pickTime.localeCompare(b.pickTime)
-                                          )
-                                          .map((stop, index) => (
-                                            <tr
-                                              key={index}
-                                              className=" hover:bg-gray-300/80"
-                                            >
-                                              <td className="thTag">
-                                                {index + 1}
-                                              </td>
-                                              <td className="thTag">
-                                                {stop?.name}
-                                              </td>
-                                              <td className="thTag">
-                                                {convertTo12HourFormat(
-                                                  stop?.pickTime
-                                                )}
-                                              </td>
-                                              <td className="thTag">
-                                                {convertTo12HourFormat(
-                                                  stop?.dropTime
-                                                )}
-                                              </td>
-                                              <td className="thTag flex w-full h-full gap-2 items-center justify-around">
-                                                <SquarePen
-                                                  onClick={() => {
-                                                    setEditStop(stop);
-                                                  }}
-                                                  className=" cursor-pointer w-5 h-5"
-                                                />
-                                                <Trash2
-                                                  onClick={() =>
-                                                    handleDeleteStop(stop._id)
-                                                  }
-                                                  className=" cursor-pointer w-5 h-5 stroke-red-500"
-                                                />
-                                              </td>
-                                            </tr>
-                                          ))}
-                                      </tbody>
-                                    </table>
-                                    <div className=" flex items-center justify-center mb-4">
-                                      <p className=" mx-auto">
-                                        *--------------*--------------*--------------*--------------*--------------*--------------*
-                                      </p>
-                                    </div>
-                                  </>
-                                )} */}
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                  <div className=" flex items-center justify-center mb-4">
+                                    <p className=" mx-auto">
+                                      *--------------*--------------*--------------*--------------*--------------*--------------*
+                                    </p>
+                                  </div>
+                                </>
+                              ) : (
+                                <div className=" mx-auto text-center text-red-600 font-semibold">
+                                  No fee record was found.
+                                </div>
+                              )}
                             </td>
                           </tr>
                         )}
@@ -326,7 +338,7 @@ export default function Students() {
               ) : (
                 <tr>
                   <td
-                    colSpan="7"
+                    colSpan="8"
                     className=" text-red-500 text-center w-full py-4"
                   >
                     {data?.message}

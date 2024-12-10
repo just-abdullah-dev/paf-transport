@@ -68,7 +68,7 @@ export default function FeeStructure() {
   
   return (
     <>
-      <div className="container mx-auto my-8 max-w-[90%] ">
+      <div className="container mx-auto my-8 max-w-[90%] text-sm ">
         <div className="mb-8 w-full">
           <div
             className={` ${isLoading ? "animate-pulse " : ""}
@@ -82,6 +82,7 @@ export default function FeeStructure() {
             </h1>
             <Button
               type="button"
+className=" text-base"
               variant={registerFee ? "danger" : "info"}
               onClick={() => {
                 setRegisterFee(!registerFee);

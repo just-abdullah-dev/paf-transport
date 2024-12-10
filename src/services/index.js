@@ -25,19 +25,26 @@ export const getBuses = async (token) => {
   return data;
 };
 
-export const getStudents = async (token) => {
-  const data = fetchTable("/student", token);
+export const getStudents = async (
+  token,
+  { search = "", routeId = "", busId = "", stopId = "" }={}
+) => {
+  const data = fetchTable(
+    `/student?search=${search}&routeId=${routeId}&bu
+sId=${busId}&stopId=${stopId}`,
+    token
+  );
   return data;
 };
 
-export const getRouteFee = async (token, routeId="") => {
+export const getRouteFee = async (token, routeId = "") => {
   const data = fetchTable(`/fee?routeId=${routeId}`, token);
   return data;
 };
 
-export const getFeeIntervals = async (token, {year="", month=""}) => {
+export const getFeeIntervals = async (token, { year = "", month = "" }={}) => {
   const data = fetchTable(`/fee/interval?year=${year}&month=${month}`, token);
-  
+
   return data;
 };
 
@@ -160,4 +167,46 @@ export const deleteFeeInterval = async (feeIntervalId, token) => {
   }
 };
 
+export const deleteGeneratedVouchers = async (feeIntervalId, token) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE}/fee/generate-voucher
+`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ feeIntervalId }),
+      }
+    );
 
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error while deleting generated vouchers:", error);
+  }
+};
+
+export const deleteVoucher = async (voucherId, token) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE}/fee/student-voucher
+`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ voucherId }),
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error while deleting student voucher:", error);
+  }
+};

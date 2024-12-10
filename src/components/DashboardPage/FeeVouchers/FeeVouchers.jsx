@@ -3,33 +3,30 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/lib/hooks";
 import Button from "@/components/utils/Button";
-import { deleteFeeInterval, getFeeIntervals } from "@/services";
-import { Search, SquarePen, Trash2 } from "lucide-react";
+import { deleteGeneratedVouchers, getFeeIntervals } from "@/services";
+import { Search, Trash2 } from "lucide-react";
 import { toast } from "@/components/utils/Toast";
-import EditFeeInterval from "./EditFeeInterval";
 import formatISODate from "@/utils/formatDate";
-import { Modal } from "@/components/utils/Modal";
-import CreateFeeInterval from "./CreateFeeInterval";
+import GenerateVouchers from "./GenerateVouchers";
 
-export default function FeeIntervals() {
+export default function FeeVouchers() {
   const [isLoading, setIsLoading] = useState(true);
-
-  const [editFeeInterval, setEditFeeInterval] = useState({});
-  const [errorModal, setErrorModal] = useState("");
-  const [registerFeeInterval, setRegisterFeeInterval] = useState(false);
+  const [generateVouchers, setGenerateVouchers] = useState(false);
 
   const user = useAppSelector((state) => state.user);
-  const [data, setData] = useState(null);
-  const [feeIntervals, setFeeIntervals] = useState([]);
   // const [searchYear, setSearchYear] = useState("");
   // const [searchMonth, setSearchMonth] = useState("");
+  const [data, setData] = useState(null);
+  const [feeIntervals, setFeeIntervals] = useState([]);
 
   useEffect(() => {
     const main = async () => {
       setIsLoading(true);
       const data = await getFeeIntervals(user.token, { year: "", month: "" });
       setData(data);
-      setFeeIntervals(data?.data);
+      setFeeIntervals(
+        data?.data.filter((item) => item?.voucherStatus === "generated")
+      );
       setIsLoading(false);
     };
     main();
@@ -70,9 +67,13 @@ export default function FeeIntervals() {
   //   setFeeIntervals(filteredFeeIntervals);
   // };
 
-  const handleDeleteFeeInterval = async (id) => {
-    if (window.confirm("Do you really want to delete this fee interval?")) {
-      const data = await deleteFeeInterval(id, user.token);
+  const handleDeleteGeneratedVouchers = async (id) => {
+    if (
+      window.confirm(
+        "Do you really want to delete generated voucher of this interval?"
+      )
+    ) {
+      const data = await deleteGeneratedVouchers(id, user.token);
       if (data?.success) {
         toast.success(data?.message);
         window.location.reload();
@@ -83,8 +84,7 @@ export default function FeeIntervals() {
   };
 
   const handleCloseModal = () => {
-    setEditFeeInterval(null);
-    setRegisterFeeInterval(false);
+    setGenerateVouchers(false);
   };
 
   return (
@@ -97,19 +97,20 @@ export default function FeeIntervals() {
             bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hoverbg-[length:125%_125%] flex items-center justify-between mb-6 w-full`}
           >
             <h1 className=" text-2xl md:text-3xl font-semibold text-custom-gradien w-fit">
-              {registerFeeInterval
-                ? "Create a Fee Interval"
-                : `Fee Intervals (${data?.success ? feeIntervals.length : 0})`}
+              {generateVouchers
+                ? "Generate a vouchers"
+                : `Generated Vouchers (${
+                    data?.success ? feeIntervals.length : 0
+                  })`}
             </h1>
             <Button
               type="button"
-className=" text-base"
-              variant={registerFeeInterval ? "danger" : "info"}
+              variant={generateVouchers ? "danger" : "info"}
               onClick={() => {
-                setRegisterFeeInterval(!registerFeeInterval);
+                setGenerateVouchers(!generateVouchers);
               }}
             >
-              {registerFeeInterval ? "Close" : "Create a Fee Interval"}
+              {generateVouchers ? "Close" : "Generate a vouchers"}
             </Button>
           </div>
 
@@ -151,8 +152,7 @@ className=" text-base"
                   <th className="thTag">Name of months</th>
                   <th className="thTag">Issue Date</th>
                   <th className="thTag">Due Date</th>
-                  <th className="thTag">Voucher Status</th>
-                  <th className="thTag">Actions</th>
+                  <th className="thTag">Delete Generated Vouchers</th>
                 </tr>
               </thead>
               {data?.success ? (
@@ -162,67 +162,52 @@ className=" text-base"
                       colSpan="7"
                       className="text-red-500 text-center w-full py-4"
                     >
-                      No fee intervals were found matching the keyword:{" "}
+                      No generated vouchers were found matching the keyword:{" "}
                       {searchYear}
                     </td>
                   </tr>
                 ) : (
                   <tbody>
-                    {feeIntervals.map((feeInterval, index) => (
-                      <>
-                        <tr
-                          key={feeInterval._id}
-                          className={`cursor-pointer hover:bg-gray-300/80 `}
-                        >
-                          <td className="thTag">{index + 1}</td>
-                          <td className="thTag">
-                            {formatISODate(feeInterval?.from)}
-                          </td>
-                          <td className="thTag">
-                            {formatISODate(feeInterval?.to)}
-                          </td>
-                          <td className="thTag">{feeInterval?.noOfMonths}</td>
-                          <td className="thTag">
-                            {feeInterval?.namesOfMonths.length > 0
-                              ? feeInterval?.namesOfMonths.join(", ")
-                              : ""}
-                          </td>
-                          <td className="thTag">
-                            {formatISODate(feeInterval?.issueDate)}
-                          </td>
-                          <td className="thTag">
-                            {formatISODate(feeInterval?.dueDate)}
-                          </td>
-                          <td className="thTag">
-                            {feeInterval?.voucherStatus === "generated"
-                              ? "Generated"
-                              : "Not Generated"}
-                          </td>
-                          <td className="thTag flex w-full h-full gap-2 items-center justify-around">
-                            <SquarePen
-                              onClick={() => {
-                                if (
-                                  feeInterval?.voucherStatus === "generated"
-                                ) {
-                                  setErrorModal(
-                                    "Vouchers for this fee interval has been generated. Delete the generated vouchers first."
-                                  );
-                                } else {
-                                  setEditFeeInterval(feeInterval);
+                    {feeIntervals.map((feeInterval, index) => {
+                      return (
+                        <>
+                          <tr
+                            key={feeInterval._id}
+                            className={` hover:bg-gray-300/80 `}
+                          >
+                            <td className="thTag">{index + 1}</td>
+                            <td className="thTag">
+                              {formatISODate(feeInterval?.from)}
+                            </td>
+                            <td className="thTag">
+                              {formatISODate(feeInterval?.to)}
+                            </td>
+                            <td className="thTag">{feeInterval?.noOfMonths}</td>
+                            <td className="thTag">
+                              {feeInterval?.namesOfMonths.length > 0
+                                ? feeInterval?.namesOfMonths.join(", ")
+                                : ""}
+                            </td>
+                            <td className="thTag">
+                              {formatISODate(feeInterval?.issueDate)}
+                            </td>
+                            <td className="thTag">
+                              {formatISODate(feeInterval?.dueDate)}
+                            </td>
+                            <td className="thTag flex w-full h-full gap-2 items-center justify-around">
+                              <Trash2
+                                onClick={() =>
+                                  handleDeleteGeneratedVouchers(
+                                    feeInterval?._id
+                                  )
                                 }
-                              }}
-                              className=" cursor-pointer w-5 h-5"
-                            />
-                            <Trash2
-                              onClick={() =>
-                                handleDeleteFeeInterval(feeInterval?._id)
-                              }
-                              className=" cursor-pointer w-5 h-5 stroke-red-500"
-                            />
-                          </td>
-                        </tr>
-                      </>
-                    ))}
+                                className=" cursor-pointer w-5 h-5 stroke-red-500"
+                              />
+                            </td>
+                          </tr>
+                        </>
+                      );
+                    })}
                   </tbody>
                 )
               ) : (
@@ -240,24 +225,8 @@ className=" text-base"
         </div>
       </div>
 
-      {/* edit fee interval  */}
-      {editFeeInterval?._id && (
-        <EditFeeInterval data={editFeeInterval} onClose={handleCloseModal} />
-      )}
-
-      {/* register fee interval  */}
-      {registerFeeInterval && <CreateFeeInterval onClose={handleCloseModal} />}
-      {/* error modal  */}
-      {errorModal && (
-        <Modal
-          title={"Info"}
-          onClose={() => {
-            setErrorModal("");
-          }}
-        >
-          <p>{errorModal}</p>
-        </Modal>
-      )}
+      {/* generate vouchers */}
+      {generateVouchers && <GenerateVouchers onClose={handleCloseModal} />}
     </>
   );
 }

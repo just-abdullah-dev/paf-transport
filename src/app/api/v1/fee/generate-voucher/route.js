@@ -99,7 +99,7 @@ export async function DELETE(req) {
     }
 
     if (!feeIntervalId) {
-      return resError("Fee interval is required.");
+      return resError("Fee interval ID is required.");
     }
 
     let feeInterval = await FeeInterval.findById(feeIntervalId);
@@ -129,7 +129,7 @@ export async function DELETE(req) {
 
       const stds = await Student.find({ route: rVoucher.route });
       if (stds.length === 0) {
-        console.log("No students was found for route id: " + fee.route);
+        console.log("No students was found for route id: " + rVoucher.route);
       } else {
         const studentPromises = stds.map(async (std) => {
           const stdVoucher = await StudentVoucher.findOneAndDelete({

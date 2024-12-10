@@ -74,7 +74,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="container mx-auto my-8 max-w-[90%] ">
+    <div className="container mx-auto my-8 max-w-[90%] text-sm ">
       <div className="mb-8">
         <div>
           <h1 className=" text-2xl md:text-3xl font-semibold mb-6 text-custom-gradient w-fit">

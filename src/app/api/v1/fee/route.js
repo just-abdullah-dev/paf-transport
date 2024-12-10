@@ -3,7 +3,9 @@ import { userAdminGuard, userAuthGuard } from "@/middleware/user";
 import Fee from "@/models/Fee";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
+import importModels from "@/models";
 
+importModels();
 // 22.
 export async function GET(req) {
   try {

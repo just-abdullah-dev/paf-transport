@@ -108,7 +108,7 @@ export default function Routes() {
 
   return (
     <>
-      <div className="container mx-auto my-8 max-w-[90%] ">
+      <div className="container mx-auto my-8 max-w-[90%] text-sm ">
         <div className="mb-8 w-full">
           <div
             className={` ${isLoading ? "animate-pulse " : ""}
@@ -122,6 +122,7 @@ export default function Routes() {
             </h1>
             <Button
               type="button"
+className=" text-base"
               variant={registerRoute ? "danger" : "info"}
               onClick={() => {
                 setRegisterRoute(!registerRoute);
@@ -170,7 +171,7 @@ export default function Routes() {
                   routes.length === 0 ? (
                     <tr>
                       <td
-                        colSpan="7"
+                        colSpan="8"
                         className="text-red-500 text-center w-full py-4"
                       >
                         No routes were found matching the keyword: {searchQuery}
@@ -216,7 +217,7 @@ export default function Routes() {
 
                           {openRouteId === route._id && (
                             <tr className=" bg-gray-300/50">
-                              <td colSpan="7" className="thTag">
+                              <td colSpan="8" className="thTag">
                                 {/* Buses Table */}
                                 <div className=" flex items-center justify-between p-2">
                                   <h3 className="font-semibold text-base mb-2">
@@ -396,7 +397,7 @@ export default function Routes() {
                 ) : (
                   <tr>
                     <td
-                      colSpan="7"
+                      colSpan="8"
                       className=" text-red-500 text-center w-full py-4"
                     >
                       {data?.message}
