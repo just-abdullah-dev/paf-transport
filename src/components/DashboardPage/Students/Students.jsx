@@ -10,6 +10,8 @@ import { Search, SquarePen, Trash2 } from "lucide-react";
 import { toast } from "@/components/utils/Toast";
 import EditStd from "./EditStd";
 import formatISODate from "@/utils/formatDate";
+import GenerateQRCode from "./QRCode";
+import ExportAllQRCodes from "./ExportAllQRCodes";
 
 export default function Students() {
   const [openStdId, setOpenStdId] = useState("");
@@ -88,18 +90,19 @@ export default function Students() {
                 ? "Register a Student"
                 : `Students (${data?.success ? stds.length : 0})`}
             </h1>
-            
-            {user?.role === "admin" &&
-            <Button
-              type="button"
-              className=" text-base"
-              variant={registerStd ? "danger" : "info"}
-              onClick={() => {
-                setRegisterStd(!registerStd);
-              }}
-            >
-              {registerStd ? "Close" : "Register a Student"}
-            </Button>}
+
+            {user?.role === "admin" && (
+              <Button
+                type="button"
+                className=" text-base"
+                variant={registerStd ? "danger" : "info"}
+                onClick={() => {
+                  setRegisterStd(!registerStd);
+                }}
+              >
+                {registerStd ? "Close" : "Register a Student"}
+              </Button>
+            )}
           </div>
 
           <div>
@@ -112,6 +115,9 @@ export default function Students() {
                 onChange={(e) => handleSearch(e.target.value)}
               />
               <Search className=" absolute right-3 " />
+            </div>
+            <div className=" w-full p-4">
+              <ExportAllQRCodes allRegs={stds.map((student) => student.reg)} />
             </div>
             <table
               className={` ${
@@ -240,6 +246,10 @@ export default function Students() {
                                     </div>
                                   </div>
                                 )}
+
+                                <div className="space-y-2">
+                                  <GenerateQRCode regNumber={std?.reg} />
+                                </div>
                               </div>
 
                               <h3 className="font-semibold text-center text-2xl my-4 ">
