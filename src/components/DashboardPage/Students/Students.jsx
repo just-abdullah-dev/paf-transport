@@ -81,9 +81,9 @@ export default function Students() {
           <div
             className={` ${isLoading ? "animate-pulse " : ""}
             rounded-lg py-4 px-8 text-white font-[500] duration-300 transition-all cursor-
-            bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hoverbg-[length:125%_125%] flex items-center justify-between mb-6 w-full`}
+            bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hover:bg-[length:125%_125%] flex md:items-center justify-between mb-6 w-full flex-col md:flex-row`}
           >
-            <h1 className=" text-2xl md:text-3xl font-semibold text-custom-gradien w-fit">
+            <h1 className=" text-xl md:text-3xl font-semibold text-custom-gradien w-fit">
               {registerStd
                 ? "Register a Student"
                 : `Students (${data?.success ? stds.length : 0})`}
@@ -106,7 +106,7 @@ export default function Students() {
             <div className="  mb-6 flex items-center justify-end relative">
               <input
                 type="text"
-                className="inputTag w-[40%]"
+                className="inputTag w-full"
                 placeholder="Search by name, email, reg, program, or department"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}

@@ -59,9 +59,9 @@ export default function UpdateFee({ checkFee = false }) {
           <div
             className={` ${isLoading ? "animate-pulse " : ""}
             rounded-lg py-4 px-8 text-white font-[500] duration-300 transition-all cursor-
-            bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hoverbg-[length:125%_125%] flex items-center justify-between mb-6 w-full`}
+            bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hover:bg-[length:125%_125%] flex md:items-center justify-between mb-6 w-full flex-col md:flex-row`}
           >
-            <h1 className=" text-2xl md:text-3xl font-semibold text-custom-gradien w-fit">
+            <h1 className=" text-xl md:text-3xl font-semibold text-custom-gradien w-fit">
               {checkFee ? "Check" : "Update"} Fee
             </h1>
           </div>
@@ -72,7 +72,7 @@ export default function UpdateFee({ checkFee = false }) {
               <div className="  flex items-center justify-end gap-6 w-full">
                 <input
                   type="text"
-                  className="inputTag w-[40%]"
+                  className="inputTag w-full"
                   placeholder="Search by name, reg"
                   value={searchKeyword}
                   onChange={(e) => {

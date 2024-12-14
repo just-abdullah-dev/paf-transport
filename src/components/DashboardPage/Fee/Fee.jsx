@@ -73,9 +73,9 @@ export default function FeeStructure() {
           <div
             className={` ${isLoading ? "animate-pulse " : ""}
             rounded-lg py-4 px-8 text-white font-[500] duration-300 transition-all cursor-
-            bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hoverbg-[length:125%_125%] flex items-center justify-between mb-6 w-full`}
+            bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hover:bg-[length:125%_125%] flex md:items-center justify-between mb-6 w-full flex-col md:flex-row`}
           >
-            <h1 className=" text-2xl md:text-3xl font-semibold text-custom-gradien w-fit">
+            <h1 className=" text-xl md:text-3xl font-semibold text-custom-gradien w-fit">
               {registerFee
                 ? "Register a Fee Structure"
                 : `Fee Structure (${data?.success ? fees.length : 0})`}
@@ -95,7 +95,7 @@ className=" text-base"
             <div className="  mb-6 flex items-center justify-end relative">
               <input
                 type="text"
-                className="inputTag w-1/3"
+                className="inputTag w-full md:w-1/3"
                 placeholder="Search by route name, road, or city"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}

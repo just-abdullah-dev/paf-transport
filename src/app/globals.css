@@ -12,6 +12,9 @@
   @apply rounded-lg py-2 px-4 text-white font-[500] duration-300 transition-all bg-gradient-to-tl from-primary to-secondary bg-[length:135%_135%] hover:bg-[length:102%_102%];
 }
 
+.custom-gradient{
+  @apply  bg-gradient-to-tl from-primary to-secondary;
+}
 
   .inputTag{
     @apply py-2 px-4 rounded-md outline-none bg-gray-300 ;
@@ -19,4 +22,18 @@
 
   .thTag{
     @apply border border-gray-300 p-2;
+  }
+
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px; /* Scrollbar width */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(to top, #003b6d, #4ECDC4); 
+    border-radius: 5px; /* Thumb rounded corners */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Track background */
   }

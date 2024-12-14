@@ -4,12 +4,9 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "@/lib/hooks";
 import Button from "@/components/utils/Button";
 import { deleteUser, getUsers } from "@/services";
-import convertTo12HourFormat from "@/utils/formatTime";
 import RegisterUser from "./RegisterUser";
 import { Search, SquarePen, Trash2 } from "lucide-react";
 import { toast } from "@/components/utils/Toast";
-import formatISODate from "@/utils/formatDate";
-import { setUser } from "@/lib/features/user/userSlice";
 import Link from "next/link";
 import EditUser from "./EditUser";
 
@@ -94,9 +91,9 @@ export default function Users() {
           <div
             className={` ${isLoading ? "animate-pulse " : ""}
             rounded-lg py-4 px-8 text-white font-[500] duration-300 transition-all cursor-
-            bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hoverbg-[length:125%_125%] flex items-center justify-between mb-6 w-full`}
+            bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hover:bg-[length:125%_125%] flex md:items-center justify-between mb-6 w-full flex-col md:flex-row`}
           >
-            <h1 className=" text-2xl md:text-3xl font-semibold text-custom-gradien w-fit">
+            <h1 className=" text-xl md:text-3xl font-semibold text-custom-gradien w-fit">
               {registerUser
                 ? "Register a User"
                 : `${
@@ -124,8 +121,8 @@ export default function Users() {
           </div>
 
           <div>
-            <div className=" flex items-center gap-4 mb-6 w-full relative ">
-              <div className=" w-full flex items-center gap-6 flex-wrap">
+            <div className=" flex items-center flex-wrap flex-col-reverse md:flex-row gap-4 mb-6 w-full relative ">
+              <div className=" w-full flex items-center gap-6 flex-wrap relative">
                 <Button
                   onClick={() => {
                     handleRoleUpdate("all");
@@ -156,14 +153,16 @@ export default function Users() {
                 </Button>
               </div>
 
-              <input
+            <div className=" w-full relative">
+            <input
                 type="text"
-                className="inputTag w-[40%]"
+                className="inputTag w-full"
                 placeholder="Search by name, email, reg, program, or department"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
               />
-              <Search className=" absolute right-3 " />
+              <Search className=" absolute right-3 top-2 " />
+            </div>
             </div>
             <table
               className={` ${

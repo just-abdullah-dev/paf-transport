@@ -1,32 +1,159 @@
 "use client";
-import { useAppSelector } from "@/lib/hooks";
+import React, { useEffect, useState } from "react";
 import {
+  X,
+  Users,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
   Banknote,
   Bus,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   ChevronsLeftRightEllipsis,
-  Coins,
   FileChartColumn,
   HandCoins,
   LayoutDashboard,
   Route,
   Tickets,
   User2Icon,
-  Users,
   UserSearch,
   UsersRound,
   WalletCards,
 } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import Header from "../LandingPage/Layout/Header/Header";
-import { toast } from "../utils/Toast";
+import Link from "next/link";
+import { useAppSelector } from "@/lib/hooks";
+import { usePathname } from "next/navigation";
 
-export default function DashboardSkeleton({ children }) {
+const adminMenu = [
+  {
+    name: "Dashboard",
+    path: "dashboard",
+    icon: <LayoutDashboard size={28} />,
+  },
+  {
+    name: "Profile",
+    path: "profile",
+    icon: <User2Icon size={28} />,
+  },
+  {
+    name: "Routes",
+    path: "routes",
+    icon: <Route size={28} />,
+  },
+  {
+    name: "Buses",
+    path: "buses",
+    icon: <Bus size={28} />,
+  },
+  {
+    name: "Students",
+    path: "students",
+    icon: <Users size={28} />,
+  },
+  {
+    name: "Fee Structure",
+    path: "fee-structure",
+    icon: <WalletCards size={28} />,
+  },
+  {
+    name: "Fee Interval",
+    path: "fee-intervals",
+    icon: <ChevronsLeftRightEllipsis size={28} />,
+  },
+  {
+    name: "Fee Vouchers",
+    path: "fee-vouchers",
+    icon: <Tickets size={28} />,
+  },
+  {
+    name: "Check Fee",
+    path: "check-fee",
+    icon: <UserSearch size={28} />,
+  },
+  {
+    name: "Update Fee",
+    path: "update-fee",
+    icon: <HandCoins size={28} />,
+  },
+  {
+    name: "Reports",
+    path: "reports",
+    icon: <FileChartColumn size={28} />,
+  },
+  {
+    name: "Users",
+    path: "users",
+    icon: <UsersRound size={28} />,
+  },
+];
+
+const bankMenu = [
+  {
+    name: "Dashboard",
+    path: "dashboard",
+    icon: <LayoutDashboard size={28} />,
+  },
+  {
+    name: "Profile",
+    path: "profile",
+    icon: <User2Icon size={28} />,
+  },
+  {
+    name: "Students",
+    path: "students",
+    icon: <Users size={28} />,
+  },
+  {
+    name: "Fee Intervals",
+    path: "fee-intervals",
+    icon: <ChevronsLeftRightEllipsis size={28} />,
+  },
+  {
+    name: "Update Fee",
+    path: "update-fee",
+    icon: <Banknote size={28} />,
+  },
+];
+
+const driverMenu = [
+  {
+    name: "Dashboard",
+    path: "dashboard",
+    icon: <LayoutDashboard size={28} />,
+  },
+  {
+    name: "Profile",
+    path: "profile",
+    icon: <User2Icon size={28} />,
+  },
+  {
+    name: "Bus & Students",
+    path: "bus-&-students",
+    icon: (
+      <>
+        <Bus size={22} /> <Users size={22} />
+      </>
+    ),
+  },
+  {
+    name: "Fee Intervals",
+    path: "fee-intervals",
+    icon: <ChevronsLeftRightEllipsis size={28} />,
+  },
+  {
+    name: "Check Fee",
+    path: "check-fee",
+    icon: <UserSearch size={28} />,
+  },
+];
+
+const DashboardSkeleton = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const [dashboardMenu, setDashboardMenu] = useState([]);
-
   const user = useAppSelector((state) => state.user);
   const pathname = usePathname();
   const arr = pathname.split("/");
@@ -57,131 +184,6 @@ export default function DashboardSkeleton({ children }) {
     }
   }, [user]);
 
-  const [openSidebar, setOpenSidebar] = useState(true);
-
-  const adminMenu = [
-    {
-      name: "Dashboard",
-      path: "dashboard",
-      icon: <LayoutDashboard size={28} />,
-    },
-    {
-      name: "Profile",
-      path: "profile",
-      icon: <User2Icon size={28} />,
-    },
-    {
-      name: "Routes",
-      path: "routes",
-      icon: <Route size={28} />,
-    },
-    {
-      name: "Buses",
-      path: "buses",
-      icon: <Bus size={28} />,
-    },
-    {
-      name: "Students",
-      path: "students",
-      icon: <Users size={28} />,
-    },
-    {
-      name: "Fee Structure",
-      path: "fee-structure",
-      icon: <WalletCards size={28} />,
-    },
-    {
-      name: "Fee Interval",
-      path: "fee-intervals",
-      icon: <ChevronsLeftRightEllipsis size={28} />,
-    },
-    {
-      name: "Fee Vouchers",
-      path: "fee-vouchers",
-      icon: <Tickets size={28} />,
-    },
-    {
-      name: "Check Fee",
-      path: "check-fee",
-      icon: <UserSearch size={28} />,
-    },
-    {
-      name: "Update Fee",
-      path: "update-fee",
-      icon: <HandCoins size={28} />,
-    },
-    {
-      name: "Reports",
-      path: "reports",
-      icon: <FileChartColumn size={28} />,
-    },
-    {
-      name: "Users",
-      path: "users",
-      icon: <UsersRound size={28} />,
-    },
-  ];
-
-  const bankMenu = [
-    {
-      name: "Dashboard",
-      path: "dashboard",
-      icon: <LayoutDashboard size={28} />,
-    },
-    {
-      name: "Profile",
-      path: "profile",
-      icon: <User2Icon size={28} />,
-    },
-    {
-      name: "Students",
-      path: "students",
-      icon: <Users size={28} />,
-    },
-    {
-      name: "Fee Intervals",
-      path: "fee-intervals",
-      icon: <ChevronsLeftRightEllipsis size={28} />,
-    },
-    {
-      name: "Update Fee",
-      path: "update-fee",
-      icon: <Banknote size={28} />,
-    },
-  ];
-
-  const driverMenu = [
-    {
-      name: "Dashboard",
-      path: "dashboard",
-      icon: <LayoutDashboard size={28} />,
-    },
-    {
-      name: "Profile",
-      path: "profile",
-      icon: <User2Icon size={28} />,
-    },
-    {
-      name: "Bus & Students",
-      path: "bus-&-students",
-      icon: (
-        <>
-          <Bus size={22} /> <Users size={22} />
-        </>
-      ),
-    },
-    {
-      name: "Fee Intervals",
-      path: "fee-intervals",
-      icon: <ChevronsLeftRightEllipsis size={28} />,
-    },
-    {
-      name: "Check Fee",
-      path: "check-fee",
-      icon: <UserSearch size={28} />,
-    },
-  ];
-
   const checkPageAccess = () => {
     // Define menus based on roles
     const menus = {
@@ -201,82 +203,137 @@ export default function DashboardSkeleton({ children }) {
     // Return true for unauthorized access and false for authorized access
     return !hasAccess;
   };
+
   return (
-    <div className="">
+    <div className="flex h-screen overflow-hidden  ">
       <Header />
-      <div className=" flex items-start">
-        <div
-          className={`${
-            openSidebar
-              ? "w-[64%] sm:w-[44%] md:w-[30%] lg:w-[16%]"
-              : "w-[10%] sm:w-[8%] md:w-[6%] lg:w-[4%]"
-          } h-screen overflow-hidden transition-all duration-1000 `}
-        ></div>
-        <div
-          className={`
-            ${
-              openSidebar
-                ? "w-[64%] sm:w-[44%] md:w-[30%] lg:w-[16%] px-2"
-                : "w-[10%] sm:w-[8%] md:w-[6%] lg:w-[4%] px-[2px]"
-            }
-                h-screen flex flex-col overflow-hidden fixed top-[69px] z-50 transition-all duration-1000 `}
-        >
-          {/* side bar open & close btn  */}
+      <Sidebar
+        currentWindow={currentWindow}
+        menus={dashboardMenu}
+        isOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+      />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className=" md:hidden mt-[60px] w-full">
           <button
-            onClick={() => {
-              setOpenSidebar(!openSidebar);
-            }}
-            title={openSidebar ? "Close Sidebar" : "Open Sidebar"}
-            className="hover:scale-105 duration-300 "
+            className=" p-2 rounded-md text-ternary hover:text-ternary/90 hover:bg-gray-100 ml-2 "
+            onClick={toggleMobileMenu}
           >
-            {openSidebar ? (
-              <div
-                className={`${
-                  !openSidebar && " justify-center"
-                } flex items-center gap-4  py-2 `}
-              >
-                <ChevronLeftIcon className=" ml-2" size={32} />
-                <p className="">Close Sidebar</p>
-              </div>
-            ) : (
-              <div className=" py-2 pl-2">
-                <ChevronRightIcon size={32} />
-              </div>
-            )}
+            <Menu size={24} />
           </button>
+        </div>
+        <main className="flex-1 overflow-x-scroll overflow-y-auto md:pt-[45px]">
+          <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">{children}</div>
+        </main>
+      </div>
+      <MobileMenu
+        currentWindow={currentWindow}
+        menus={dashboardMenu}
+        isOpen={isMobileMenuOpen}
+        toggleMobileMenu={toggleMobileMenu}
+      />
+    </div>
+  );
+};
+
+export default DashboardSkeleton;
+
+const Sidebar = ({ isOpen, toggleSidebar, menus, currentWindow }) => {
+  return (
+    <aside
+      className={` mt-[72px] p-2 text-white bg-ternary/90 backdrop-blur-lg overflow-y-auto custom-scrollbar transition-all duration-700 ease-in-out ${
+        isOpen ? "w-64" : "w-20"
+      } hidden md:block`}
+    >
+      <div
+        className={`
+        ${isOpen ? " px-4 justify-between " : " px-0 justify-center "}
+        flex items-center bg-gradient-to-tl from-secondary to-primary bg-[length:110%_110%] hoverbg-[length:125%_125%] rounded-lg py-2 text-white font-[500] duration-300 transition-all`}
+      >
+        {isOpen && <span className="text-lg font-semibold">Menu</span>}
+        <button
+          onClick={toggleSidebar}
+          className=" rounded-full custom-gradient p-1 "
+        >
+          {isOpen ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
+        </button>
+      </div>
+      <nav>
+        <ul className=" grid gap-1 my-1">
           {/* all options  */}
-          {dashboardMenu.map((opt, index) => {
+          {menus.map((opt, index) => {
             return (
               <Link
-                className={`${!openSidebar && " justify-center"} ${
-                  currentWindow === opt?.path &&
-                  " bg-gradient-to-tl text-white  "
-                } 
-              flex items-center gap-4 rounded-lg hover:text-white font-[500] hover:bg-gradient-to-tl from-primary to-secondary  py-2 px-2`}
+                className={`
+                   ${!isOpen ? " justify-center " : " "}
+             ${currentWindow === opt?.path && " bg-gradient-to-tl  "} 
+              flex items-center gap-4 rounded-lg font-[500] hover:bg-gradient-to-tl from-primary to-secondary p-3
+               `}
                 href={
                   opt?.path === "dashboard"
                     ? `/${opt?.path}`
                     : `/dashboard/${opt?.path}`
                 }
                 key={index}
-                title={opt?.name}
               >
-                {opt?.icon}
-                {openSidebar && opt?.name}
+                {opt.icon}
+                {isOpen && <span className="ml-4">{opt?.name}</span>}
               </Link>
             );
           })}
+        </ul>
+      </nav>
+    </aside>
+  );
+};
+
+const MobileMenu = ({ isOpen, toggleMobileMenu, menus, currentWindow }) => {
+  return (
+    <div
+      onClick={toggleMobileMenu}
+      className={`fixed inset-0 bg-gray-800 bg-opacity-75 z-50 md:hidden transition-opacity duration-300 ${
+        isOpen
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none"
+      }`}
+    >
+      <div
+        className={`fixed inset-y-0 left-0 max-w-xs w-full bg-ternary/90 overflow-y-auto custom-scrollbar  p-2 text-white shadow-xl transform transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between p-3">
+          <span className="text-xl font-semibold">Menu</span>
+          <button onClick={toggleMobileMenu} className="p-1 rounded-full ">
+            <X size={24} />
+          </button>
         </div>
-        <div
-          className={`${
-            openSidebar
-              ? "w-[36%] sm:w-[56%] md:w-[70%] lg:w-[84%]"
-              : "w-[90%] sm:w-[92%] md:w-[94%] lg:w-[96%]"
-          } transition-all duration-1000 h-fit min-h-screen mt-16 `}
-        >
-          {children}
-        </div>
+        <nav className=" c">
+          <ul className=" grid gap-1 my-1">
+            {/* all options  */}
+            {menus.map((opt, index) => {
+              return (
+                <Link
+                  className={`
+                   ${!isOpen ? " justify-center " : " "}
+             ${currentWindow === opt?.path && " bg-gradient-to-tl  "} 
+              flex items-center gap-4 rounded-lg font-[500] hover:bg-gradient-to-tl from-primary to-secondary p-3
+               `}
+                  href={
+                    opt?.path === "dashboard"
+                      ? `/${opt?.path}`
+                      : `/dashboard/${opt?.path}`
+                  }
+                  key={index}
+                >
+                  {opt.icon}
+                  {isOpen && <span className="ml-4">{opt?.name}</span>}
+                </Link>
+              );
+            })}
+          </ul>
+        </nav>
       </div>
     </div>
   );
-}
+};
