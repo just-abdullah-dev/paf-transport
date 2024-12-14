@@ -37,3 +37,21 @@
   .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent; /* Track background */
   }
+
+
+  @keyframes moveLine {
+    0% {
+      transform: translateY(-50%);
+    }
+    50% {
+      transform: translateY(50%);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+  
+  .animate-move-line {
+    animation: moveLine 2s linear infinite;
+  }
+  

@@ -8,6 +8,7 @@ import { toast } from "@/components/utils/Toast";
 import formatISODate from "@/utils/formatDate";
 import convertTo12HourFormat from "@/utils/formatTime";
 import EditFee from "./EditFee";
+import ScanQRCode from "../CheckFee/ScanQRCode";
 
 export default function UpdateFee({ checkFee = false }) {
   const [openStdId, setOpenStdId] = useState("");
@@ -24,6 +25,7 @@ export default function UpdateFee({ checkFee = false }) {
       toast.error("Enter student name or registration #.");
       return;
     }
+
     setIsLoading(true);
     const data = await getStudents(user.token, { search: searchKeyword });
     if (data?.success) {
@@ -88,6 +90,15 @@ export default function UpdateFee({ checkFee = false }) {
                 className=" hover:scale-[1.04] duration-300 transition-all cursor-pointer "
               />
             </div>
+            {checkFee && (
+              <ScanQRCode
+                onScan={(data) => {
+                  setSearchKeyword(data);
+                }}
+                searchKeyword={searchKeyword}
+                handleSearch={handleSearch}
+              />
+            )}
             <table
               className={` ${
                 isLoading ? "animate-pulse " : ""
