@@ -5,7 +5,9 @@ import FeeInterval from "@/models/FeeInterval";
 import RouteVoucher from "@/models/RouteVoucher";
 import Student from "@/models/Student";
 import StudentVoucher from "@/models/StudentVoucher";
+import { informStudentAboutDeletedVoucher } from "@/utils/informStudentAboutDeletedVoucher";
 import resError from "@/utils/resError";
+import { sendVoucherToStudent } from "@/utils/sendVoucherToStudent";
 import { NextResponse } from "next/server";
 
 // 30.
@@ -35,7 +37,7 @@ export async function POST(req) {
       return resError("Vouchers are already generated for this fee interval.");
     }
 
-    const fees = await Fee.find();
+    const fees = await Fee.find().populate("route");
     if (fees.length === 0) {
       return resError("No fee was found.");
     }
@@ -43,16 +45,18 @@ export async function POST(req) {
     // Collect all promises
     const feePromises = fees.map(async (fee) => {
       const routeVoucher = await RouteVoucher.create({
-        route: fee.route,
+        route: fee.route?._id,
         fee: fee._id,
         feeInterval: feeInterval._id,
         totalAmount: Number(feeInterval.noOfMonths) * Number(fee.perMonth),
         finePerDay: Number(fee.perDay),
       });
 
-      const stds = await Student.find({ route: fee.route });
+      const stds = await Student.find({ route: fee.route?._id }).populate(
+        "bus"
+      );
       if (stds.length === 0) {
-        console.log("No students was found for route id: " + fee.route);
+        console.log("No students was found for route id: " + fee.route?._id);
       } else {
         const studentPromises = stds.map(async (std) => {
           const stdVoucher = await StudentVoucher.create({
@@ -63,6 +67,22 @@ export async function POST(req) {
             { _id: std._id },
             { $addToSet: { fees: stdVoucher._id } }
           );
+          await sendVoucherToStudent({
+            name: std?.name,
+            email: std?.email,
+            program: std?.program,
+            reg: std?.reg,
+            voucherId: stdVoucher._id,
+            route: `${fee.route?.name} (${fee.route?.road}, ${fee.route?.city})`,
+            bus: std?.bus,
+            feeIntervals: [
+              {
+                ...feeInterval._doc,
+                totalAmount: routeVoucher?.totalAmount,
+                finePerDay: routeVoucher?.finePerDay,
+              },
+            ],
+          });
         });
         await Promise.all(studentPromises); // Wait for all student promises
       }
@@ -115,7 +135,11 @@ export async function DELETE(req) {
 
     const routeVouchers = await RouteVoucher.find({
       feeInterval: feeIntervalId,
-    });
+    })
+      .populate("fee")
+      .populate({
+        path: "route",
+      });
     if (routeVouchers.length === 0) {
       return resError(
         "No route vouchers was found against this fee interval: " +
@@ -127,9 +151,9 @@ export async function DELETE(req) {
     const routeVouchersPromises = routeVouchers.map(async (rVoucher) => {
       await RouteVoucher.findByIdAndDelete(rVoucher._id);
 
-      const stds = await Student.find({ route: rVoucher.route });
+      const stds = await Student.find({ route: rVoucher.route?._id }).populate("bus");
       if (stds.length === 0) {
-        console.log("No students was found for route id: " + rVoucher.route);
+        console.log("No students was found for route id: " + rVoucher.route?._id);
       } else {
         const studentPromises = stds.map(async (std) => {
           const stdVoucher = await StudentVoucher.findOneAndDelete({
@@ -140,6 +164,22 @@ export async function DELETE(req) {
             { _id: std._id },
             { $pull: { fees: stdVoucher._id } }
           );
+          await informStudentAboutDeletedVoucher({
+            name: std?.name,
+            email: std?.email,
+            program: std?.program,
+            reg: std?.reg,
+            voucherId: stdVoucher._id,
+            route: `${rVoucher.route?.name} (${rVoucher.route?.road}, ${rVoucher.route?.city})`,
+            bus: std?.bus,
+            feeIntervals: [
+              {
+                ...feeInterval._doc,
+                totalAmount: rVoucher?.totalAmount,
+                finePerDay: rVoucher?.finePerDay,
+              },
+            ],
+          });
         });
         await Promise.all(studentPromises); // Wait for all student promises
       }

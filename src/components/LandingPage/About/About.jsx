@@ -18,8 +18,8 @@ export default function About() {
               "Dynamically assign and optimize bus routes",
               "Track and process fee payments seamlessly",
               "Generate secure, unique QR codes for student identification",
-              "Monitor real-time bus locations and schedules",
-              "Generate comprehensive reports and analytics"
+              "Monitor real-time bus locations and schedules (v2)",
+              "Generate comprehensive reports and analytics (v2)"
             ].map((item, index) => (
               <li key={index} className="flex items-start space-x-2">
                 <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0 mt-1" />

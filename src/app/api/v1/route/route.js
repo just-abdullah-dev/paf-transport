@@ -34,7 +34,6 @@ export async function GET(req) {
     if (data.length < 1) {
       return resError(`Routes not found.`);
     }
-    
 
     const updatedRoutes = await Promise.all(
       data.map(async (route) => {
@@ -87,12 +86,11 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     await connectDB();
-    console.log("yes it runs");
 
-    // const authData = await userAdminGuard(req);
-    // if (!authData?.success) {
-    //   return resError(authData?.message);
-    // }
+    const authData = await userAdminGuard(req);
+    if (!authData?.success) {
+      return resError(authData?.message);
+    }
 
     const { name, road, city, buses, stops } = await req.json();
 
