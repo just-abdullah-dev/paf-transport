@@ -8,7 +8,7 @@ import { toast } from "@/components/utils/Toast";
 import formatISODate from "@/utils/formatDate";
 import convertTo12HourFormat from "@/utils/formatTime";
 import EditFee from "./EditFee";
-import ScanQRCode from "../CheckFee/ScanQRCode";
+import { QRCodeScanner } from "../CheckFee/ScanQRCode";
 
 export default function UpdateFee({ checkFee = false }) {
   const [openStdId, setOpenStdId] = useState("");
@@ -32,6 +32,24 @@ export default function UpdateFee({ checkFee = false }) {
       setStudents(data?.data);
     } else {
       setError(`No students found matching ${searchKeyword}.`);
+      setSearchKeyword("");
+      setStudents([]);
+    }
+    setIsLoading(false);
+  };
+
+  const handleSearchReg = async (reg) => {
+    if (!reg) {
+      toast.error("Can't fetched the registration # from qr code.");
+      return;
+    }
+
+    setIsLoading(true);
+    const data = await getStudents(user.token, { reg });
+    if (data?.success) {
+      setStudents(data?.data);
+    } else {
+      setError(`No student found matching ${reg}.`);
       setSearchKeyword("");
       setStudents([]);
     }
@@ -91,12 +109,14 @@ export default function UpdateFee({ checkFee = false }) {
               />
             </div>
             {checkFee && (
-              <ScanQRCode
+              <QRCodeScanner
+                onError={(e) => {
+                  console.log(e);
+                }}
                 onScan={(data) => {
                   setSearchKeyword(data);
+                  handleSearchReg(data);
                 }}
-                searchKeyword={searchKeyword}
-                handleSearch={handleSearch}
               />
             )}
             <table

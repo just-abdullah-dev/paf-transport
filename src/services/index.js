@@ -27,11 +27,10 @@ export const getBuses = async (token, busId = "") => {
 
 export const getStudents = async (
   token,
-  { search = "", routeId = "", busId = "", stopId = "" } = {}
+  { search = "", routeId = "", busId = "", stopId = "", reg = "" } = {}
 ) => {
   const data = fetchTable(
-    `/student?search=${search}&routeId=${routeId}&bu
-sId=${busId}&stopId=${stopId}`,
+    `/student?search=${search}&routeId=${routeId}&busId=${busId}&stopId=${stopId}&reg=${reg}`,
     token
   );
   return data;

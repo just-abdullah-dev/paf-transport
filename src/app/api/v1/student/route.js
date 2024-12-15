@@ -20,10 +20,14 @@ export async function GET(req) {
     const busId = searchParams.get("busId");
     const stopId = searchParams.get("stopId");
     const search = searchParams.get("search");
+    const reg = searchParams.get("reg");
 
     let query = {};
     if (routeId) {
       query = { ...query, route: routeId };
+    }
+    if (reg) {
+      query = { ...query, reg: { $regex: reg, $options: "i" } };
     }
 
     if (busId) {
