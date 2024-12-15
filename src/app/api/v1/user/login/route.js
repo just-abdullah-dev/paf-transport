@@ -1,7 +1,9 @@
 import connectDB from "@/lib/db";
+import importModels from "@/models";
 import User from "@/models/User";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
+importModels();
 
 // 5.
 export async function POST(req) {
