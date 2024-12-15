@@ -48,7 +48,7 @@ export default function UpdateFee({ checkFee = false }) {
     const data = await getStudents(user.token, { reg });
     if (data?.success) {
       setStudents(data?.data);
-      setOpenStdId(data?.data[0]?._id)
+      setOpenStdId(data?.data[0]?._id);
     } else {
       setError(`No student found matching ${reg}.`);
       setSearchKeyword("");
@@ -117,6 +117,7 @@ export default function UpdateFee({ checkFee = false }) {
                 onScan={(data) => {
                   setSearchKeyword(data);
                   setStudents([]);
+                  setOpenStdId("");
                   handleSearchReg(data);
                 }}
               />
