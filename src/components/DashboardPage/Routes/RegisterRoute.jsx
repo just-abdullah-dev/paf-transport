@@ -7,7 +7,7 @@ import convertTo12HourFormat from "@/utils/formatTime";
 import { Loader2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-function RegisterRoute({goBack}) {
+function RegisterRoute({ goBack }) {
   const [isLoading, setIsLoading] = useState(true);
   const user = useAppSelector((state) => state.user);
   const [drivers, setDrivers] = useState([]);
@@ -174,30 +174,40 @@ function RegisterRoute({goBack}) {
       <div className="space-y-2">
         <h3>Stops</h3>
         <div className=" grid grid-cols-3  gap-4 ">
-          <input
-            type="text"
-            name="name"
-            placeholder="Stop Name"
-            value={stop.name}
-            onChange={handleStopChange}
-            className="inputTag w-full col-span-1"
-          />
-          <input
-            type="time"
-            name="pickTime"
-            placeholder="Pick Time"
-            value={stop.pickTime}
-            onChange={handleStopChange}
-            className="inputTag w-full col-span-1"
-          />
-          <input
-            type="time"
-            name="dropTime"
-            placeholder="Drop Time"
-            value={stop.dropTime}
-            onChange={handleStopChange}
-            className="inputTag w-full col-span-1"
-          />
+          <div>
+            <label className=" labelTag block">Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Stop Name"
+              value={stop.name}
+              onChange={handleStopChange}
+              className="inputTag w-full col-span-1"
+            />
+          </div>
+          <div>
+            <label className=" labelTag block">Pick Time</label>
+            <input
+              type="time"
+              name="pickTime"
+              placeholder="Pick Time"
+              value={stop.pickTime}
+              onChange={handleStopChange}
+              className="inputTag w-full col-span-1"
+            />
+          </div>
+
+          <div>
+            <label className=" labelTag block">Drop Time</label>
+            <input
+              type="time"
+              name="dropTime"
+              placeholder="Drop Time"
+              value={stop.dropTime}
+              onChange={handleStopChange}
+              className="inputTag w-full col-span-1"
+            />
+          </div>
           <div></div>
           <div></div>
           <Button type="button" onClick={addStop} className="col-span-1">
