@@ -3,11 +3,12 @@ import importModels from "@/models";
 import User from "@/models/User";
 import resError from "@/utils/resError";
 import { NextResponse } from "next/server";
-importModels();
+
 
 // 5.
 export async function POST(req) {
   try {
+    importModels();
     await connectDB();
 
     const { email, password } = await req.json();

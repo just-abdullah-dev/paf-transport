@@ -1,3 +1,4 @@
+import importModels from "@/models";
 import mongoose from "mongoose";
 const MONGODB_URL = process.env.DB_URI;
 
@@ -13,6 +14,7 @@ if (!cached) {
 
 const connectDB = async () => {
     if (cached.conn) {
+        importModels();
         return cached.conn;
     }
 
@@ -23,6 +25,7 @@ const connectDB = async () => {
         };
 
         cached.promise = mongoose.connect(MONGODB_URL, opts).then((mongoose) => {
+            importModels();
             return mongoose
         })
     }
