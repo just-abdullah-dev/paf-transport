@@ -115,6 +115,7 @@ export default function UpdateFee({ checkFee = false }) {
                 }}
                 onScan={(data) => {
                   setSearchKeyword(data);
+                  setStudents([]);
                   handleSearchReg(data);
                 }}
               />
