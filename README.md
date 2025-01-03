@@ -33,7 +33,7 @@ To get started with the **PAF-IAST Transportation System**, follow these steps t
 
 ```bash
 git clone https://github.com/just-abdullah-dev/paf-transport.git
-cd paf-transport-system
+cd paf-transport
 ```
 
 ### 2. Install Dependencies
