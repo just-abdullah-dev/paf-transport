@@ -18,6 +18,11 @@ The project is developed using the **MERN stack** (MongoDB, Express.js, React.js
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
 
+## DEMO
+ - For admin use email: admin@test.com and password: 12345678
+ - For bank use email: bank1@test.com and password: 12345678
+ - For admin use email: driver6@test.com and password: 12345678
+
 ---
 
 ## Clone and Install
