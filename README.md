@@ -32,7 +32,7 @@ The project is developed using the **MERN stack** (MongoDB, Express.js, React.js
 To get started with the **PAF-IAST Transportation System**, follow these steps to clone the repository:
 
 ```bash
-git clone https://github.com/your-username/paf-transport-system.git
+git clone https://github.com/just-abdullah-dev/paf-transport.git
 cd paf-transport-system
 ```
 
@@ -63,7 +63,6 @@ To run the project locally, open a command prompt and navigate to the root direc
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:3000` and the backend API will be accessible at `http://localhost:5000`.
 
 ### macOS:
 
@@ -72,8 +71,6 @@ On macOS, follow the same steps to run the development server. Open the terminal
 ```bash
 npm run dev
 ```
-
-After running the above command, the frontend can be accessed at `http://localhost:3000` and the backend at `http://localhost:5000`.
 
 ---
 
